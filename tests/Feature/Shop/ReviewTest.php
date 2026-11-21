@@ -31,7 +31,7 @@ it('stores a review as pending and shows it only after approval', function () {
     $url = app(OrderNotifier::class)->reviewUrl($order);
 
     $this->get($url)->assertOk();
-    $this->post($url, ['name' => 'Sarah', 'rating' => 5, 'body' => 'Beautiful box, the name print is crisp.'])->assertRedirect();
+    $this->post($url, ['name' => 'Sarah', 'rating' => 5, 'body' => 'Beautiful box, and the notebook paper is lovely.'])->assertRedirect();
 
     $review = Review::query()->sole();
 

@@ -5,25 +5,19 @@ import { useT } from '@/hooks/use-t';
 import type { Design } from '@/types/site';
 
 /**
- * The cover as it will be printed: the chosen faculty design with the name
- * the customer is typing. Uses the uploaded cover mock-up when there is
- * one, otherwise the drawn notebook.
+ * The notebook cover for the chosen faculty design. Uses the uploaded cover
+ * mock-up when there is one, otherwise the drawn notebook.
  */
 export function CoverPreview({
     design,
-    name,
     className,
 }: {
     design: Design;
-    name: string;
     className?: string;
 }) {
     const t = useT();
     const reduce = useReducedMotion();
-    const shown = name.trim();
-    const label = shown
-        ? t('product.preview_label', { design: design.name, name: shown })
-        : t('product.preview_label_blank', { design: design.name });
+    const label = t('product.preview_label_blank', { design: design.name });
 
     return (
         <div className={className}>
@@ -42,21 +36,15 @@ export function CoverPreview({
                         className="relative"
                     >
                         {design.cover ? (
-                            <div className="relative">
-                                <Picture
-                                    image={{ ...design.cover, alt: label }}
-                                    ratio="5 / 7"
-                                    sizes="(min-width: 1024px) 30vw, 70vw"
-                                />
-                                <span className="display absolute inset-x-0 bottom-[9%] text-center text-[clamp(0.875rem,2.2vw,1.375rem)] text-paper">
-                                    {shown}
-                                </span>
-                            </div>
+                            <Picture
+                                image={{ ...design.cover, alt: label }}
+                                ratio="5 / 7"
+                                sizes="(min-width: 1024px) 30vw, 70vw"
+                            />
                         ) : (
                             <Notebook
                                 designKey={design.key}
                                 tint={design.tint}
-                                name={shown}
                                 label={label}
                                 className="drop-shadow-[0_18px_24px_rgba(28,27,25,0.18)]"
                             />

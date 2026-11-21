@@ -38,7 +38,6 @@ export default function ProductPage({
     const first =
         designs.find((design) => !design.sold_out) ?? designs[0] ?? null;
     const [designKey, setDesignKey] = useState(first?.key ?? null);
-    const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const design = designs.find((item) => item.key === designKey) ?? first;
 
@@ -68,11 +67,7 @@ export default function ProductPage({
             <div className="wrap grid gap-10 pt-8 pb-16 lg:grid-cols-12 lg:gap-8 lg:pt-14 lg:pb-28">
                 <div className="lg:col-span-7">
                     {design && (
-                        <CoverPreview
-                            design={design}
-                            name={name}
-                            className="mb-4"
-                        />
+                        <CoverPreview design={design} className="mb-4" />
                     )}
                     <Gallery images={images} />
                 </div>
@@ -84,8 +79,6 @@ export default function ProductPage({
                             designs={designs}
                             design={design}
                             onDesign={choose}
-                            name={name}
-                            onName={setName}
                             message={message}
                             onMessage={setMessage}
                             heading={
@@ -227,12 +220,7 @@ export default function ProductPage({
 
             <StickyOrderBar
                 product={product}
-                href={checkoutUrl(
-                    product.checkout_url,
-                    design?.key,
-                    name,
-                    message,
-                )}
+                href={checkoutUrl(product.checkout_url, design?.key, message)}
                 soldOut={product.sold_out || (design?.sold_out ?? false)}
             />
         </>

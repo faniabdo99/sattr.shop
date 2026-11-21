@@ -15,7 +15,6 @@ type Props = {
         notes: string | null;
         design: string;
         quantity: number | null;
-        cover_name: string | null;
         gift_message: string | null;
         payment_method: string;
         payment_status: string;
@@ -87,14 +86,6 @@ export default function OrderSlip({ order }: Props) {
                         <Row label="Quantity">
                             <span className="font-semibold tabular-nums">
                                 {order.quantity ?? '—'}
-                            </span>
-                        </Row>
-                        <Row label="Cover name">
-                            <span
-                                dir="auto"
-                                className="text-[11pt] font-semibold"
-                            >
-                                {order.cover_name || '—'}
                             </span>
                         </Row>
                         {order.gift_message && (

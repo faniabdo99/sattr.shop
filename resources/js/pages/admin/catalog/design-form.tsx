@@ -272,7 +272,7 @@ export default function DesignFormPage({ design, media, urls }: Props) {
                         collection="cover"
                         items={media.cover}
                         title="Cover mock-up"
-                        hint="A straight-on notebook cover mock-up. The customer's name is overlaid near the bottom."
+                        hint="A straight-on notebook cover mock-up."
                         single
                     />
                     <MediaManager

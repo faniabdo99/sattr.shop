@@ -5,7 +5,7 @@ import { Cta } from '@/components/site/cta';
 import { DesignPicker } from '@/components/site/design-picker';
 import { BoxClosed, BoxContents, BoxLid } from '@/components/site/drawings';
 import { FaqList } from '@/components/site/faq-list';
-import { TextAreaField, TextField } from '@/components/site/fields';
+import { TextAreaField } from '@/components/site/fields';
 import { Notebook } from '@/components/site/notebook';
 import { checkoutUrl } from '@/components/site/order-panel';
 import { CoverPreview, MessageCard } from '@/components/site/personalizer';
@@ -46,7 +46,6 @@ export default function Home({
     const { site } = useSite();
     const available = designs.find((design) => !design.sold_out) ?? designs[0];
     const [designKey, setDesignKey] = useState(available?.key ?? null);
-    const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const design = designs.find((item) => item.key === designKey) ?? available;
     const totalStock = designs.reduce((sum, item) => sum + item.stock, 0);
@@ -298,25 +297,9 @@ export default function Home({
                     <div className="grid gap-12 md:grid-cols-12 md:gap-8">
                         <CoverPreview
                             design={design}
-                            name={name}
                             className="md:col-span-5"
                         />
                         <div className="flex flex-col gap-9 md:col-span-6 md:col-start-7">
-                            <TextField
-                                label={t('product.cover_name')}
-                                optional={t('product.optional')}
-                                placeholder={t(
-                                    'product.cover_name_placeholder',
-                                )}
-                                hint={t('product.cover_name_hint')}
-                                counter={`${name.length}/20`}
-                                maxLength={20}
-                                value={name}
-                                onChange={(event) =>
-                                    setName(event.target.value)
-                                }
-                                autoComplete="off"
-                            />
                             <DesignPicker
                                 designs={designs}
                                 value={design.key}
@@ -343,7 +326,6 @@ export default function Home({
                                     href={checkoutUrl(
                                         product.checkout_url,
                                         design.key,
-                                        name,
                                         message,
                                     )}
                                     disabled={design.sold_out}

@@ -42,7 +42,6 @@ class CheckoutController extends Controller
             'max_quantity' => config('sattr.orders.max_quantity'),
             'preset' => [
                 'design' => $request->string('design')->toString() ?: null,
-                'name' => Str::limit($request->string('name')->toString(), 20, ''),
                 'message' => Str::limit($request->string('message')->toString(), 200, ''),
             ],
             'store_url' => route('checkout.store'),

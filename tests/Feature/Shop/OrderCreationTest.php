@@ -28,7 +28,6 @@ it('creates an order from a valid checkout', function () {
         ->and($order->locale)->toBe('en')
         ->and($order->ip)->not->toBeNull()
         ->and($order->items)->toHaveCount(1)
-        ->and($order->items[0]->cover_name)->toBe('Sarah')
         ->and($order->items[0]->gift_message)->toBe('Congratulations')
         ->and($order->items[0]->design_name)->toBe('Medical')
         ->and($order->histories)->toHaveCount(1)
@@ -86,7 +85,6 @@ it('rejects invalid input', function (array $overrides, string $field) {
     'landline number' => [['phone' => '0223456789'], 'phone'],
     'short number' => [['phone' => '0101234567'], 'phone'],
     'unknown prefix' => [['phone' => '01312345678'], 'phone'],
-    'cover name over 20 chars' => [['cover_name' => str_repeat('a', 21)], 'cover_name'],
     'gift message over 200 chars' => [['gift_message' => str_repeat('a', 201)], 'gift_message'],
     'quantity above 5' => [['quantity' => 6], 'quantity'],
     'quantity zero' => [['quantity' => 0], 'quantity'],

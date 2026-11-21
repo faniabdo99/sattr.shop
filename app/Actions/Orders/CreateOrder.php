@@ -88,7 +88,6 @@ class CreateOrder
                 'quantity' => $quantity,
                 'unit_price' => intdiv($quote['total'], $quantity),
                 'line_total' => $quote['total'],
-                'cover_name' => $data['cover_name'] ?? null,
                 'gift_message' => $data['gift_message'] ?? null,
             ]);
 

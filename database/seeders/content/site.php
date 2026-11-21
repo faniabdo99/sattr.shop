@@ -11,11 +11,11 @@ return [
             'en' => 'Desk essentials for the university student, in their faculty’s design',
         ],
         'description' => [
-            'ar' => 'أربع قطع تُستخدم كل يوم، مجموعة في علبة هدايا صلبة: نوت بوك A5 بغلاف مقوّى، مج سيراميك 11 أونصة، أربعة كوسترز، وقلم معدني. اختر تصميم الكلية، واكتب الاسم على الغلاف، وأضف رسالة تصل مع الطقم.',
-            'en' => 'Four things used every day, kept together in a rigid gift box: an A5 hardcover notebook, an 11oz ceramic mug, four coasters and a metal pen. Choose the faculty design, put a name on the cover, and add a message that arrives with the pack.',
+            'ar' => 'أربع قطع تُستخدم كل يوم، مجموعة في علبة هدايا صلبة: نوت بوك A5 بغلاف مقوّى، مج سيراميك 11 أونصة، أربعة كوسترز، وقلم معدني. اختر تصميم الكلية، وأضف رسالة تصل مع الطقم.',
+            'en' => 'Four things used every day, kept together in a rigid gift box: an A5 hardcover notebook, an 11oz ceramic mug, four coasters and a metal pen. Choose the faculty design and add a message that arrives with the pack.',
         ],
         'contents' => [
-            ['title' => ['ar' => 'نوت بوك A5', 'en' => 'A5 notebook'], 'detail' => ['ar' => 'غلاف مقوّى بتصميم الكلية والاسم مطبوع عليه', 'en' => 'Hardcover in the faculty design, with the name printed on it']],
+            ['title' => ['ar' => 'نوت بوك A5', 'en' => 'A5 notebook'], 'detail' => ['ar' => 'غلاف مقوّى بتصميم الكلية', 'en' => 'Hardcover in the faculty design']],
             ['title' => ['ar' => 'مج 11 أونصة', 'en' => '11oz mug'], 'detail' => ['ar' => 'سيراميك أبيض بطباعة ثابتة', 'en' => 'White ceramic with a lasting print']],
             ['title' => ['ar' => 'أربعة كوسترز', 'en' => 'Four coasters'], 'detail' => ['ar' => 'طقم متناسق مع تصميم الغلاف', 'en' => 'A set matched to the cover design']],
             ['title' => ['ar' => 'قلم', 'en' => 'Pen'], 'detail' => ['ar' => 'قلم معدني بحبر أسود', 'en' => 'Metal body, black ink']],
@@ -37,7 +37,7 @@ return [
         ],
         [
             'question' => ['ar' => 'كم يستغرق التوصيل؟', 'en' => 'How long does delivery take?'],
-            'answer' => ['ar' => 'نطبع الاسم ونجهّز الطقم خلال يومين إلى ثلاثة أيام عمل، ثم يصلك مع بوسطة خلال يومين إلى خمسة أيام حسب المحافظة. الشحن مجاني لكل محافظات مصر.', 'en' => 'We print the name and prepare the pack in two to three working days, then Bosta delivers within two to five days depending on the governorate. Delivery is free across Egypt.'],
+            'answer' => ['ar' => 'نجهّز الطقم خلال يومين إلى ثلاثة أيام عمل، ثم يصلك مع بوسطة خلال يومين إلى خمسة أيام حسب المحافظة. الشحن مجاني لكل محافظات مصر.', 'en' => 'We prepare the pack in two to three working days, then Bosta delivers within two to five days depending on the governorate. Delivery is free across Egypt.'],
         ],
         [
             'question' => ['ar' => 'كيف أدفع بإنستاباي وأحصل على الخصم؟', 'en' => 'How do I pay by InstaPay and get the discount?'],
@@ -49,7 +49,7 @@ return [
         ],
         [
             'question' => ['ar' => 'هل يمكن استرجاع الطقم؟', 'en' => 'Can the pack be returned?'],
-            'answer' => ['ar' => 'يمكن استرجاع الطقم غير المخصص خلال 14 يوماً من الاستلام. الطقم المطبوع عليه اسم يُسترجع فقط في حالة عيب صناعة أو تلف في الشحن، ونستبدله على حسابنا.', 'en' => 'A pack without personalisation can be returned within 14 days of delivery. A pack printed with a name can be returned only for a manufacturing fault or shipping damage, and we replace it at our cost.'],
+            'answer' => ['ar' => 'يمكن استرجاع الطقم خلال 14 يوماً من الاستلام بحالته الأصلية. إذا وصل بعيب صناعة أو تلف في الشحن نستبدله على حسابنا.', 'en' => 'A pack can be returned within 14 days of delivery in its original condition. If it arrives with a manufacturing fault or shipping damage, we replace it at our cost.'],
         ],
     ],
 
@@ -59,8 +59,8 @@ return [
             'title' => ['ar' => 'عن سطر', 'en' => 'About Sattr'],
             'excerpt' => ['ar' => 'أساسيات المكتب، مصنوعة بعناية.', 'en' => 'Desk essentials, made with care.'],
             'body' => [
-                'ar' => '<p>سطر علامة مصرية لأساسيات المكتب. نؤمن أن الأشياء التي نستخدمها كل يوم تستحق أن تُصنع جيداً: ورق يحب الحبر، مج يُمسك براحة، وعلبة تُفتح على مهل.</p><p>بدأنا بطقم واحد لطلاب الجامعات، لأن سنوات الدراسة هي السنوات التي يُكتب فيها أكثر. كل طقم يُطبع ويُجهّز عند الطلب، بتصميم الكلية واسم صاحبه.</p><h2>لماذا «سطر»؟</h2><p>لأن كل شيء يبدأ بسطر: فكرة، ملخص، خطة، رسالة. والخط الرفيع الذي تراه في كل مكان هنا هو توقيعنا.</p>',
-                'en' => '<p>Sattr is an Egyptian brand of desk essentials. We believe the things used every day deserve to be made well: paper that welcomes ink, a mug that sits right in the hand, a box that opens slowly.</p><p>We began with one pack for university students, because the years of study are the years of the most writing. Each pack is printed and prepared to order, in the faculty’s design and with its owner’s name.</p><h2>Why “Sattr”?</h2><p>Sattr (سطر) means a line of writing. Everything starts with one: an idea, a summary, a plan, a letter. The thin rule you see throughout is our signature.</p>',
+                'ar' => '<p>سطر علامة مصرية لأساسيات المكتب. نؤمن أن الأشياء التي نستخدمها كل يوم تستحق أن تُصنع جيداً: ورق يحب الحبر، مج يُمسك براحة، وعلبة تُفتح على مهل.</p><p>بدأنا بطقم واحد لطلاب الجامعات، لأن سنوات الدراسة هي السنوات التي يُكتب فيها أكثر. كل طقم يُجهّز عند الطلب بتصميم الكلية التي تختارها.</p><h2>لماذا «سطر»؟</h2><p>لأن كل شيء يبدأ بسطر: فكرة، ملخص، خطة، رسالة. والخط الرفيع الذي تراه في كل مكان هنا هو توقيعنا.</p>',
+                'en' => '<p>Sattr is an Egyptian brand of desk essentials. We believe the things used every day deserve to be made well: paper that welcomes ink, a mug that sits right in the hand, a box that opens slowly.</p><p>We began with one pack for university students, because the years of study are the years of the most writing. Each pack is prepared to order in the faculty design you choose.</p><h2>Why “Sattr”?</h2><p>Sattr (سطر) means a line of writing. Everything starts with one: an idea, a summary, a plan, a letter. The thin rule you see throughout is our signature.</p>',
             ],
         ],
         'delivery-returns' => [
@@ -68,8 +68,8 @@ return [
             'title' => ['ar' => 'التوصيل والاسترجاع', 'en' => 'Delivery & Returns'],
             'excerpt' => ['ar' => 'شحن مجاني لكل محافظات مصر مع بوسطة.', 'en' => 'Free delivery to every governorate in Egypt with Bosta.'],
             'body' => [
-                'ar' => '<h2>التوصيل</h2><p>الشحن مجاني لكل محافظات مصر مع بوسطة. نجهّز الطقم خلال يومين إلى ثلاثة أيام عمل، ويصل خلال يومين إلى خمسة أيام بعد الشحن حسب المحافظة. يتواصل معك المندوب قبل التسليم.</p><h2>الاسترجاع والاستبدال</h2><p>الطقم غير المخصص يمكن استرجاعه خلال 14 يوماً من الاستلام بحالته الأصلية. الطقم المطبوع عليه اسم مصنوع خصيصاً لك، ويُسترجع فقط عند وجود عيب صناعة أو تلف في الشحن، ونستبدله على حسابنا.</p><h2>استرداد المبلغ</h2><p>يُرد المبلغ بنفس طريقة الدفع خلال سبعة أيام عمل من استلامنا للطقم المرتجع.</p>',
-                'en' => '<h2>Delivery</h2><p>Delivery is free to every governorate in Egypt with Bosta. We prepare each pack in two to three working days, and it arrives two to five days after dispatch depending on the governorate. The courier calls before delivery.</p><h2>Returns and exchanges</h2><p>A pack without personalisation can be returned within 14 days of delivery in its original condition. A pack printed with a name is made for you alone and can be returned only for a manufacturing fault or shipping damage; we replace it at our cost.</p><h2>Refunds</h2><p>Refunds are made by the original payment method within seven working days of our receiving the returned pack.</p>',
+                'ar' => '<h2>التوصيل</h2><p>الشحن مجاني لكل محافظات مصر مع بوسطة. نجهّز الطقم خلال يومين إلى ثلاثة أيام عمل، ويصل خلال يومين إلى خمسة أيام بعد الشحن حسب المحافظة. يتواصل معك المندوب قبل التسليم.</p><h2>الاسترجاع والاستبدال</h2><p>يمكن استرجاع الطقم خلال 14 يوماً من الاستلام بحالته الأصلية. إذا وصل بعيب صناعة أو تلف في الشحن نستبدله على حسابنا.</p><h2>استرداد المبلغ</h2><p>يُرد المبلغ بنفس طريقة الدفع خلال سبعة أيام عمل من استلامنا للطقم المرتجع.</p>',
+                'en' => '<h2>Delivery</h2><p>Delivery is free to every governorate in Egypt with Bosta. We prepare each pack in two to three working days, and it arrives two to five days after dispatch depending on the governorate. The courier calls before delivery.</p><h2>Returns and exchanges</h2><p>A pack can be returned within 14 days of delivery in its original condition. If it arrives with a manufacturing fault or shipping damage, we replace it at our cost.</p><h2>Refunds</h2><p>Refunds are made by the original payment method within seven working days of our receiving the returned pack.</p>',
             ],
         ],
         'privacy' => [
@@ -86,8 +86,8 @@ return [
             'title' => ['ar' => 'الشروط والأحكام', 'en' => 'Terms & Conditions'],
             'excerpt' => ['ar' => 'شروط الطلب والدفع والتوصيل.', 'en' => 'The terms for ordering, payment and delivery.'],
             'body' => [
-                'ar' => '<h2>الطلبات</h2><p>يُعد الطلب مؤكداً بعد مراجعته من فريقنا. طلبات إنستاباي تُؤكد بعد التحقق من التحويل.</p><h2>الأسعار والدفع</h2><p>الأسعار بالجنيه المصري وتشمل الشحن. خصم إنستاباي يُطبق على الطلبات المدفوعة بالتحويل فقط.</p><h2>التخصيص</h2><p>يُطبع الاسم كما كتبته عند الطلب، فنرجو مراجعته قبل التأكيد.</p>',
-                'en' => '<h2>Orders</h2><p>An order is confirmed once our team has reviewed it. InstaPay orders are confirmed after the transfer is verified.</p><h2>Prices and payment</h2><p>Prices are in Egyptian pounds and include delivery. The InstaPay discount applies only to orders paid by transfer.</p><h2>Personalisation</h2><p>The name is printed exactly as entered at checkout, so please check it before confirming.</p>',
+                'ar' => '<h2>الطلبات</h2><p>يُعد الطلب مؤكداً بعد مراجعته من فريقنا. طلبات إنستاباي تُؤكد بعد التحقق من التحويل.</p><h2>الأسعار والدفع</h2><p>الأسعار بالجنيه المصري وتشمل الشحن. خصم إنستاباي يُطبق على الطلبات المدفوعة بالتحويل فقط.</p><h2>بطاقة الرسالة</h2><p>تُكتب الرسالة على البطاقة كما كتبتها عند الطلب، فنرجو مراجعتها قبل التأكيد.</p>',
+                'en' => '<h2>Orders</h2><p>An order is confirmed once our team has reviewed it. InstaPay orders are confirmed after the transfer is verified.</p><h2>Prices and payment</h2><p>Prices are in Egyptian pounds and include delivery. The InstaPay discount applies only to orders paid by transfer.</p><h2>Message card</h2><p>The message is written on the card exactly as entered at checkout, so please check it before confirming.</p>',
             ],
         ],
         'contact' => [
@@ -113,8 +113,8 @@ return [
             'title' => ['ar' => 'أفكار هدايا لطلاب الطب يستخدمونها فعلاً', 'en' => 'Gift ideas for medical students they will actually use'],
             'excerpt' => ['ar' => 'طالب الطب لا يحتاج شيئاً يوضع على الرف. هذه هدايا تدخل في يومه.', 'en' => 'A medical student does not need something for the shelf. These are gifts that enter the day.'],
             'body' => [
-                'ar' => '<p>أصعب ما في إهداء طالب طب أن وقته ليس ملكه. الهدية الجيدة هي التي تدخل في يومه دون أن تطلب منه شيئاً: شيء يكتب فيه، شيء يشرب منه، شيء يبقى على المكتب.</p><h2>نوت بوك يحتمل الاستخدام اليومي</h2><p>الملخصات تُكتب كل ليلة. نوت بوك بغلاف مقوّى وورق سميك يعيش ترماً كاملاً ولا تتفكك صفحاته.</p><h2>مج للقهوة</h2><p>ليالي المذاكرة طويلة. مج جيد الحجم بسيط التصميم يصبح جزءاً من الروتين.</p><h2>شيء باسمه</h2><p>التخصيص يحوّل الغرض إلى هدية. اسم على الغلاف يكفي.</p><p>طقم سطر للطب يجمع الثلاثة في علبة واحدة.</p>',
-                'en' => '<p>The hard part of buying for a medical student is that their time is not their own. A good gift enters the day without asking anything of them: something to write in, something to drink from, something that stays on the desk.</p><h2>A notebook that survives daily use</h2><p>Summaries are written every night. A hardcover notebook with heavy paper lasts a full term without shedding pages.</p><h2>A mug for the coffee</h2><p>Study nights are long. A well-sized, simply designed mug becomes part of the routine.</p><h2>Something with their name</h2><p>Personalisation turns an object into a gift. A name on the cover is enough.</p><p>The Sattr Medical pack puts all three in one box.</p>',
+                'ar' => '<p>أصعب ما في إهداء طالب طب أن وقته ليس ملكه. الهدية الجيدة هي التي تدخل في يومه دون أن تطلب منه شيئاً: شيء يكتب فيه، شيء يشرب منه، شيء يبقى على المكتب.</p><h2>نوت بوك يحتمل الاستخدام اليومي</h2><p>الملخصات تُكتب كل ليلة. نوت بوك بغلاف مقوّى وورق سميك يعيش ترماً كاملاً ولا تتفكك صفحاته.</p><h2>مج للقهوة</h2><p>ليالي المذاكرة طويلة. مج جيد الحجم بسيط التصميم يصبح جزءاً من الروتين.</p><h2>شيء من كليته</h2><p>ما يخص دراسته يحوّل الغرض إلى هدية. تصميم كليته على الغلاف يكفي.</p><p>طقم سطر للطب يجمع الثلاثة في علبة واحدة.</p>',
+                'en' => '<p>The hard part of buying for a medical student is that their time is not their own. A good gift enters the day without asking anything of them: something to write in, something to drink from, something that stays on the desk.</p><h2>A notebook that survives daily use</h2><p>Summaries are written every night. A hardcover notebook with heavy paper lasts a full term without shedding pages.</p><h2>A mug for the coffee</h2><p>Study nights are long. A well-sized, simply designed mug becomes part of the routine.</p><h2>Something from their faculty</h2><p>What belongs to their studies turns an object into a gift. Their faculty’s design on the cover is enough.</p><p>The Sattr Medical pack puts all three in one box.</p>',
             ],
         ],
         [
@@ -123,8 +123,8 @@ return [
             'title' => ['ar' => 'أفضل هدايا التخرج في مصر', 'en' => 'The best graduation gifts in Egypt'],
             'excerpt' => ['ar' => 'هدية التخرج تُحفظ سنوات. كيف تختار ما يستحق البقاء.', 'en' => 'A graduation gift is kept for years. How to choose one worth keeping.'],
             'body' => [
-                'ar' => '<p>التخرج لحظة لا تتكرر، وهديته تُحفظ. القاعدة البسيطة: اختر شيئاً يُستخدم في الحياة التي تبدأ بعده، لا شيئاً يذكّر فقط بما انتهى.</p><h2>هدايا للمكتب الأول</h2><p>أول وظيفة تعني أول مكتب. نوت بوك وقلم ومج بتصميم الكلية تجعل المكتب الجديد مألوفاً.</p><h2>أضف رسالة</h2><p>بطاقة بخط واضح وجملة صادقة تبقى أطول من الهدية نفسها.</p><h2>اطلب مبكراً</h2><p>الهدايا المخصصة تحتاج أياماً للطباعة والتوصيل. اطلب قبل الحفل بأسبوع على الأقل.</p>',
-                'en' => '<p>Graduation happens once, and its gift is kept. The simple rule: choose something used in the life that starts afterwards, not something that only recalls what has ended.</p><h2>Gifts for the first desk</h2><p>A first job means a first desk. A notebook, pen and mug in the faculty’s design make a new desk feel familiar.</p><h2>Add a message</h2><p>A card with a clear hand and an honest sentence lasts longer than the gift itself.</p><h2>Order early</h2><p>Personalised gifts need days to print and deliver. Order at least a week before the ceremony.</p>',
+                'ar' => '<p>التخرج لحظة لا تتكرر، وهديته تُحفظ. القاعدة البسيطة: اختر شيئاً يُستخدم في الحياة التي تبدأ بعده، لا شيئاً يذكّر فقط بما انتهى.</p><h2>هدايا للمكتب الأول</h2><p>أول وظيفة تعني أول مكتب. نوت بوك وقلم ومج بتصميم الكلية تجعل المكتب الجديد مألوفاً.</p><h2>أضف رسالة</h2><p>بطاقة بخط واضح وجملة صادقة تبقى أطول من الهدية نفسها.</p><h2>اطلب مبكراً</h2><p>الهدايا المجهّزة عند الطلب تحتاج أياماً للتجهيز والتوصيل. اطلب قبل الحفل بأسبوع على الأقل.</p>',
+                'en' => '<p>Graduation happens once, and its gift is kept. The simple rule: choose something used in the life that starts afterwards, not something that only recalls what has ended.</p><h2>Gifts for the first desk</h2><p>A first job means a first desk. A notebook, pen and mug in the faculty’s design make a new desk feel familiar.</p><h2>Add a message</h2><p>A card with a clear hand and an honest sentence lasts longer than the gift itself.</p><h2>Order early</h2><p>Gifts prepared to order need days to pack and deliver. Order at least a week before the ceremony.</p>',
             ],
         ],
         [

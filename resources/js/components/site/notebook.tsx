@@ -1,8 +1,7 @@
 import { cn } from '@/lib/utils';
 
 /**
- * A drawn A5 notebook cover in the faculty's colour, with its line motif
- * and the customer's name set where it will be printed.
+ * A drawn A5 notebook cover in the faculty's colour, with its line motif.
  */
 
 const MOTIFS: Record<string, string> = {
@@ -23,15 +22,13 @@ const MOTIFS: Record<string, string> = {
 type Props = {
     designKey: string;
     tint: string;
-    name?: string;
     className?: string;
     /** Accessible description; omit when purely decorative. */
     label?: string;
 };
 
-export function Notebook({ designKey, tint, name, className, label }: Props) {
+export function Notebook({ designKey, tint, className, label }: Props) {
     const motif = MOTIFS[designKey] ?? MOTIFS.arts;
-    const shown = (name ?? '').trim();
 
     return (
         <svg
@@ -72,25 +69,6 @@ export function Notebook({ designKey, tint, name, className, label }: Props) {
                 strokeLinejoin="round"
                 opacity="0.9"
             />
-            <line
-                x1="36"
-                y1="232"
-                x2="164"
-                y2="232"
-                stroke="#F6F3EC"
-                strokeWidth="0.5"
-                opacity="0.5"
-            />
-            <text
-                x="100"
-                y="250"
-                textAnchor="middle"
-                fill="#F6F3EC"
-                fontSize={shown.length > 14 ? 9 : 11}
-                style={{ fontFamily: 'var(--display-font)' }}
-            >
-                {shown}
-            </text>
         </svg>
     );
 }

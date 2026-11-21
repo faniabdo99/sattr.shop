@@ -38,7 +38,6 @@ type Props = {
             design_key: string | null;
             tint: string | null;
             quantity: number;
-            cover_name: string | null;
             gift_message: string | null;
         } | null;
     };
@@ -519,7 +518,6 @@ export default function OrderPage({
                                     <Notebook
                                         designKey={order.item.design_key}
                                         tint={order.item.tint}
-                                        name={order.item.cover_name ?? ''}
                                     />
                                 </div>
                             )}
@@ -538,14 +536,6 @@ export default function OrderPage({
                                         {order.item.quantity}
                                     </dd>
                                 </div>
-                                {order.item.cover_name && (
-                                    <div className="flex justify-between gap-6 border-t border-stone py-3">
-                                        <dt className="text-ink-soft">
-                                            {t('order.cover_name')}
-                                        </dt>
-                                        <dd>{order.item.cover_name}</dd>
-                                    </div>
-                                )}
                                 {order.item.gift_message && (
                                     <div className="border-t border-stone py-3">
                                         <dt className="text-ink-soft">

@@ -30,7 +30,7 @@ class OrderNotifier
             ], 'en'),
             array_values(array_filter([
                 "{$order->customer_name}, {$order->phone}",
-                $item ? "{$item->quantity} × {$item->design_name}".($item->cover_name ? " (cover: {$item->cover_name})" : '') : null,
+                $item ? "{$item->quantity} × {$item->design_name}" : null,
                 "{$order->governorate}, {$order->city}",
                 $order->utm_source ? "Source: {$order->utm_source} / {$order->utm_medium}" : null,
             ])),

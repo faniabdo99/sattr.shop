@@ -20,7 +20,6 @@ class CheckoutRequest extends FormRequest
         $this->merge([
             'phone' => EgyptianMobile::normalise($this->input('phone')),
             'alt_phone' => EgyptianMobile::normalise($this->input('alt_phone')),
-            'cover_name' => $this->trimmed('cover_name'),
             'gift_message' => $this->trimmed('gift_message'),
             'email' => $this->trimmed('email'),
             'notes' => $this->trimmed('notes'),
@@ -33,7 +32,6 @@ class CheckoutRequest extends FormRequest
         return [
             'design' => ['required', 'string', Rule::exists('designs', 'key')->where('is_active', true)],
             'quantity' => ['required', 'integer', 'min:1', 'max:'.config('sattr.orders.max_quantity')],
-            'cover_name' => ['nullable', 'string', 'max:20'],
             'gift_message' => ['nullable', 'string', 'max:200'],
             'customer_name' => ['required', 'string', 'min:3', 'max:120'],
             'phone' => ['required', new EgyptianMobile],

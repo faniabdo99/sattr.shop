@@ -26,7 +26,6 @@ return [
     ],
     'attributes' => [
         'design' => 'تصميم الكلية',
-        'cover_name' => 'الاسم على الغلاف',
         'gift_message' => 'بطاقة الرسالة',
         'payment_method' => 'طريقة الدفع',
         'phone' => 'رقم الموبايل',

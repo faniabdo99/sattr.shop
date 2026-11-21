@@ -1,24 +1,19 @@
 import type { ReactNode } from 'react';
 import { Cta } from '@/components/site/cta';
 import { DesignPicker } from '@/components/site/design-picker';
-import { TextAreaField, TextField } from '@/components/site/fields';
+import { TextAreaField } from '@/components/site/fields';
 import { useT } from '@/hooks/use-t';
 import type { Design, Product } from '@/types/site';
 
 export function checkoutUrl(
     base: string,
     design?: string | null,
-    name?: string,
     message?: string,
 ): string {
     const url = new URL(base);
 
     if (design) {
         url.searchParams.set('design', design);
-    }
-
-    if (name?.trim()) {
-        url.searchParams.set('name', name.trim());
     }
 
     if (message?.trim()) {
@@ -57,8 +52,6 @@ type Props = {
     designs: Design[];
     design: Design | null;
     onDesign: (key: string) => void;
-    name: string;
-    onName: (value: string) => void;
     message: string;
     onMessage: (value: string) => void;
     /** Faculty pages lock the design and hide the picker. */
@@ -66,14 +59,12 @@ type Props = {
     heading: ReactNode;
 };
 
-/** Price, design, personalisation and the order action in one panel. */
+/** Price, design, gift message and the order action in one panel. */
 export function OrderPanel({
     product,
     designs,
     design,
     onDesign,
-    name,
-    onName,
     message,
     onMessage,
     lockDesign,
@@ -98,18 +89,6 @@ export function OrderPanel({
                 />
             )}
 
-            <TextField
-                label={t('product.cover_name')}
-                optional={t('product.optional')}
-                placeholder={t('product.cover_name_placeholder')}
-                hint={t('product.cover_name_hint')}
-                counter={`${name.length}/20`}
-                maxLength={20}
-                value={name}
-                onChange={(event) => onName(event.target.value)}
-                autoComplete="off"
-            />
-
             <TextAreaField
                 label={t('product.gift_message')}
                 optional={t('product.optional')}
@@ -133,7 +112,6 @@ export function OrderPanel({
                         href={checkoutUrl(
                             product.checkout_url,
                             design?.key,
-                            name,
                             message,
                         )}
                     >

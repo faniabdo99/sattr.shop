@@ -37,7 +37,6 @@ type Order = OrderRow & {
     subtotal_label: string;
     discount_label: string;
     cod_label: string;
-    cover_name: string | null;
     gift_message: string | null;
     tint: string | null;
     paid_at: string | null;
@@ -553,7 +552,7 @@ export default function OrderShow({
                         />
                     </Panel>
 
-                    <Panel title="Personalisation">
+                    <Panel title="Pack">
                         <dl className="grid gap-4 sm:grid-cols-2">
                             <Item label="Design">
                                 <span className="flex items-center gap-2">
@@ -572,14 +571,6 @@ export default function OrderShow({
                             <Item label="Quantity">
                                 <span className="tabular-nums">
                                     {order.quantity ?? '—'}
-                                </span>
-                            </Item>
-                            <Item label="Cover name" className="sm:col-span-2">
-                                <span
-                                    dir="auto"
-                                    className="text-base font-medium"
-                                >
-                                    {order.cover_name || '—'}
                                 </span>
                             </Item>
                             <Item

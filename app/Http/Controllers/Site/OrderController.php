@@ -67,7 +67,6 @@ class OrderController extends Controller
                     'design_key' => $item->design?->key,
                     'tint' => $item->design?->tint,
                     'quantity' => $item->quantity,
-                    'cover_name' => $item->cover_name,
                     'gift_message' => $item->gift_message,
                 ] : null,
             ],

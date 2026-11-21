@@ -27,7 +27,7 @@ type Props = {
     payment_options: PaymentOption[];
     governorates: { key: string; name: string }[];
     max_quantity: number;
-    preset: { design: string | null; name: string; message: string };
+    preset: { design: string | null; message: string };
     store_url: string;
 };
 
@@ -85,7 +85,6 @@ export default function Checkout({
     const form = useForm({
         design: initial?.key ?? '',
         quantity: 1,
-        cover_name: preset.name,
         gift_message: preset.message,
         customer_name: '',
         phone: '',
@@ -313,23 +312,6 @@ export default function Checkout({
                                 )
                             )}
                         </div>
-                    </Step>
-
-                    <Step number={2} title={t('checkout.section_personal')}>
-                        <TextField
-                            label={t('product.cover_name')}
-                            optional={t('product.optional')}
-                            placeholder={t('product.cover_name_placeholder')}
-                            hint={t('product.cover_name_hint')}
-                            counter={`${data.cover_name.length}/20`}
-                            maxLength={20}
-                            value={data.cover_name}
-                            onChange={(event) =>
-                                setData('cover_name', event.target.value)
-                            }
-                            error={errors.cover_name}
-                            autoComplete="off"
-                        />
                         <TextAreaField
                             label={t('product.gift_message')}
                             optional={t('product.optional')}
@@ -344,7 +326,7 @@ export default function Checkout({
                         />
                     </Step>
 
-                    <Step number={3} title={t('checkout.section_delivery')}>
+                    <Step number={2} title={t('checkout.section_delivery')}>
                         <TextField
                             label={t('checkout.full_name')}
                             name="name"
@@ -483,7 +465,7 @@ export default function Checkout({
                         </div>
                     </Step>
 
-                    <Step number={4} title={t('checkout.section_payment')}>
+                    <Step number={3} title={t('checkout.section_payment')}>
                         <fieldset>
                             <legend className="sr-only">
                                 {t('checkout.section_payment')}
@@ -591,7 +573,6 @@ export default function Checkout({
                         {design && (
                             <CoverPreview
                                 design={design}
-                                name={data.cover_name}
                                 className="mt-6 max-w-64 lg:max-w-none"
                             />
                         )}

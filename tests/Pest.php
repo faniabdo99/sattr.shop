@@ -49,7 +49,6 @@ function checkoutData(array $overrides = []): array
     return [
         'design' => 'medical',
         'quantity' => 1,
-        'cover_name' => 'Sarah',
         'gift_message' => 'Congratulations',
         'customer_name' => 'Sarah Ahmed',
         'phone' => '01012345678',

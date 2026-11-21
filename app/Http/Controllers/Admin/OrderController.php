@@ -84,7 +84,6 @@ class OrderController extends Controller
                 'subtotal_label' => Money::format($order->subtotal, 'en'),
                 'discount_label' => Money::format($order->discount_amount, 'en'),
                 'cod_label' => Money::format($order->codAmount(), 'en'),
-                'cover_name' => $item?->cover_name,
                 'gift_message' => $item?->gift_message,
                 'tint' => $item?->design?->tint,
                 'paid_at' => $order->paid_at?->timezone('Africa/Cairo')->format('d M Y, H:i'),
@@ -214,7 +213,6 @@ class OrderController extends Controller
                 'notes' => $order->notes,
                 'design' => $item?->design?->getTranslation('name', 'en').' / '.$item?->design?->getTranslation('name', 'ar'),
                 'quantity' => $item?->quantity,
-                'cover_name' => $item?->cover_name,
                 'gift_message' => $item?->gift_message,
                 'payment_method' => $order->payment_method->label('en'),
                 'payment_status' => $order->payment_status->label('en'),
@@ -231,7 +229,7 @@ class OrderController extends Controller
 
         $columns = [
             'code', 'created_at', 'status', 'payment_method', 'payment_status', 'customer_name', 'phone', 'alt_phone', 'email',
-            'governorate', 'city', 'address', 'design', 'quantity', 'cover_name', 'gift_message', 'subtotal', 'discount', 'total',
+            'governorate', 'city', 'address', 'design', 'quantity', 'gift_message', 'subtotal', 'discount', 'total',
             'payment_reference', 'paid_at', 'bosta_tracking_number', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term',
             'utm_content', 'gclid', 'fbclid', 'ttclid', 'referrer', 'landing_page', 'locale',
         ];
@@ -251,7 +249,7 @@ class OrderController extends Controller
                         $order->code, $order->created_at?->timezone('Africa/Cairo')->toDateTimeString(), $order->status->value,
                         $order->payment_method->value, $order->payment_status->value, $order->customer_name, $order->phone,
                         $order->alt_phone, $order->email, $order->governorate, $order->city, $order->address,
-                        $item?->design_name, $item?->quantity, $item?->cover_name, $item?->gift_message,
+                        $item?->design_name, $item?->quantity, $item?->gift_message,
                         Money::decimal($order->subtotal), Money::decimal($order->discount_amount), Money::decimal($order->total),
                         $order->payment_reference, $order->paid_at?->timezone('Africa/Cairo')->toDateTimeString(),
                         $order->bosta_tracking_number, $order->utm_source, $order->utm_medium, $order->utm_campaign,

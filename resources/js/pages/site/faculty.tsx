@@ -36,7 +36,6 @@ export default function FacultyPage({
 }: Props) {
     const t = useT();
     const { site } = useSite();
-    const [name, setName] = useState('');
     const [message, setMessage] = useState('');
     const others = designs.filter((item) => item.key !== design.key);
 
@@ -93,11 +92,7 @@ export default function FacultyPage({
                             {page.excerpt}
                         </p>
                     )}
-                    <CoverPreview
-                        design={design}
-                        name={name}
-                        className="mt-10"
-                    />
+                    <CoverPreview design={design} className="mt-10" />
                     <div className="mt-4">
                         <Gallery images={design.images} />
                     </div>
@@ -116,8 +111,6 @@ export default function FacultyPage({
                             designs={designs}
                             design={design}
                             onDesign={() => {}}
-                            name={name}
-                            onName={setName}
                             message={message}
                             onMessage={setMessage}
                             lockDesign
@@ -220,12 +213,7 @@ export default function FacultyPage({
 
             <StickyOrderBar
                 product={product}
-                href={checkoutUrl(
-                    product.checkout_url,
-                    design.key,
-                    name,
-                    message,
-                )}
+                href={checkoutUrl(product.checkout_url, design.key, message)}
                 soldOut={design.sold_out}
             />
         </>
