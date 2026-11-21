@@ -1,50 +1,68 @@
 <?php
 
+use App\Models\Design;
+use App\Models\Faq;
+use App\Models\Page;
+use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-
-/*
-|--------------------------------------------------------------------------
-| Test Case
-|--------------------------------------------------------------------------
-|
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind different classes or traits.
-|
-*/
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Functions
-|--------------------------------------------------------------------------
-|
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
-|
-*/
-
-function something()
+/**
+ * A minimal shop: the Gift Pack at 849 EGP with a 10% InstaPay discount,
+ * one design with a published faculty page, and one FAQ.
+ *
+ * @return array{product: Product, design: Design, page: Page}
+ */
+function shop(int $stock = 10): array
 {
-    // ..
+    $product = Product::factory()->create(['slug' => 'gift-pack']);
+
+    $design = Design::factory()->for($product)->create([
+        'key' => 'medical',
+        'name' => ['ar' => 'الطب', 'en' => 'Medical'],
+        'stock' => $stock,
+    ]);
+
+    $page = Page::factory()->faculty($design)->create([
+        'slug' => ['ar' => 'هدايا-طلاب-الطب', 'en' => 'medical-student'],
+        'title' => ['ar' => 'هدية لطالب الطب', 'en' => 'A gift for the medical student'],
+    ]);
+
+    Faq::factory()->create();
+
+    return compact('product', 'design', 'page');
+}
+
+/**
+ * Valid checkout input.
+ *
+ * @param  array<string, mixed>  $overrides
+ * @return array<string, mixed>
+ */
+function checkoutData(array $overrides = []): array
+{
+    return [
+        'design' => 'medical',
+        'quantity' => 1,
+        'cover_name' => 'Sarah',
+        'gift_message' => 'Congratulations',
+        'customer_name' => 'Sarah Ahmed',
+        'phone' => '01012345678',
+        'email' => 'sarah@example.com',
+        'governorate' => 'cairo',
+        'city' => 'Nasr City',
+        'address' => '12 Tahrir Street',
+        'payment_method' => 'instapay',
+        ...$overrides,
+    ];
+}
+
+function admin(): User
+{
+    return User::factory()->admin()->create();
 }

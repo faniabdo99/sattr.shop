@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FlushesPublicCache;
 use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasSeo;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,7 +14,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Article extends Model implements HasMedia
 {
-    use HasFactory, HasImages, HasSeo, HasTranslations;
+    use FlushesPublicCache, HasFactory, HasImages, HasSeo, HasTranslations;
 
     protected $guarded = [];
 

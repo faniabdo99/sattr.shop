@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PageType;
+use App\Models\Concerns\FlushesPublicCache;
 use App\Models\Concerns\HasImages;
 use App\Models\Concerns\HasSeo;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Page extends Model implements HasMedia
 {
-    use HasFactory, HasImages, HasSeo, HasTranslations;
+    use FlushesPublicCache, HasFactory, HasImages, HasSeo, HasTranslations;
 
     protected $guarded = [];
 

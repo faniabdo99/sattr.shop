@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PageType;
+use App\Models\Concerns\FlushesPublicCache;
 use App\Models\Concerns\HasImages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Design extends Model implements HasMedia
 {
-    use HasFactory, HasImages, HasTranslations;
+    use FlushesPublicCache, HasFactory, HasImages, HasTranslations;
 
     protected $guarded = [];
 
@@ -52,6 +53,11 @@ class Design extends Model implements HasMedia
     public function scopeActive(Builder $query): void
     {
         $query->where('is_active', true)->orderBy('sort');
+    }
+
+    public function hasOrders(): bool
+    {
+        return OrderItem::query()->where('design_id', $this->id)->exists();
     }
 
     public function isSoldOut(): bool

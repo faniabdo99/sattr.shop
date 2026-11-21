@@ -1,6 +1,6 @@
 <?php
 
-use Spatie\ResponseCache\CacheProfiles\CacheAllSuccessfulGetRequests;
+use App\Support\PublicPagesCacheProfile;
 use Spatie\ResponseCache\Hasher\DefaultHasher;
 use Spatie\ResponseCache\Replacers\CsrfTokenReplacer;
 use Spatie\ResponseCache\Serializers\JsonSerializer;
@@ -17,7 +17,7 @@ return [
          * to store requests. This can be the name of any store
          * that is configured in your app's cache.php config
          */
-        'store' => env('RESPONSE_CACHE_DRIVER', 'file'),
+        'store' => env('RESPONSE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
 
         /*
          * The default number of seconds responses will be cached
@@ -115,6 +115,7 @@ return [
         'utm_content',
         'gclid',
         'fbclid',
+        'ttclid',
     ],
 
     /*
@@ -133,7 +134,7 @@ return [
      * By default all successful GET-requests will be cached.
      * You can provide your own by using the CacheProfile.
      */
-    'cache_profile' => CacheAllSuccessfulGetRequests::class,
+    'cache_profile' => PublicPagesCacheProfile::class,
 
     /*
      * This class is responsible for generating a hash for

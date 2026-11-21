@@ -29,6 +29,7 @@ class Order extends Model
             'discount_amount' => 'integer',
             'shipping_amount' => 'integer',
             'total' => 'integer',
+            'tracking_context' => 'array',
             'paid_at' => 'datetime',
             'payment_flagged_at' => 'datetime',
             'review_requested_at' => 'datetime',

@@ -41,6 +41,7 @@ return new class extends Migration
             $table->string('ttclid')->nullable();
             $table->string('referrer', 500)->nullable();
             $table->string('landing_page', 500)->nullable();
+            $table->json('tracking_context')->nullable();
             $table->string('payment_proof_path')->nullable();
             $table->string('payment_reference')->nullable();
             $table->timestamp('paid_at')->nullable();
