@@ -2,42 +2,69 @@
 
 @import 'tw-animate-css';
 
+@import './tokens.css';
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
 @custom-variant dark (&:is(.dark *));
 
+/* Brand tokens as Tailwind utilities. `inline` keeps them as var() references
+   so data-theme="ink" re-themes a subtree. */
 @theme inline {
+    --color-paper: var(--paper);
+    --color-paper-raised: var(--paper-raised);
+    --color-ink: var(--ink);
+    --color-ink-muted: var(--ink-muted);
+    --color-sand: var(--sand);
+    --color-sand-deep: var(--sand-deep);
+    --color-line: var(--line);
+    --color-line-hover: var(--line-hover);
+    --color-on-line: var(--on-line);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-danger: var(--danger);
+
     --font-sans: var(--body-font);
     --font-display: var(--display-font);
+
+    --text-display-xl: var(--fs-display-xl);
+    --text-display-xl--line-height: var(--lh-display-xl);
+    --text-display-l: var(--fs-display-l);
+    --text-display-l--line-height: var(--lh-display-l);
+    --text-display-m: var(--fs-display-m);
+    --text-display-m--line-height: var(--lh-display-m);
 }
 
 @theme {
-    /* Brand palette */
-    --color-paper: #f6f3ec;
-    --color-paper-deep: #ece7dc;
-    --color-ink: #1c1b19;
-    --color-ink-soft: #5c574e;
-    --color-stone: #e2ddd2;
-    --color-line: #2747d6;
-    --color-line-deep: #1e38ad;
-    --color-danger: #a3271b;
-    --color-ok: #2f5d50;
+    --text-title: 1.5rem;
+    --text-title--line-height: 2rem;
+    --text-title--font-weight: 600;
+    --text-body-l: 1.125rem;
+    --text-body-l--line-height: 1.75rem;
+    --text-body: 1rem;
+    --text-body--line-height: 1.625rem;
+    --text-label: 0.875rem;
+    --text-label--line-height: 1.25rem;
+    --text-label--font-weight: 600;
+    --text-caption: 0.8125rem;
+    --text-caption--line-height: 1.125rem;
+    --text-overline: 0.75rem;
+    --text-overline--line-height: 1rem;
+    --text-overline--font-weight: 600;
 
-    /* Type scale */
-    --text-display-xl: clamp(2.75rem, 7.2vw, 6rem);
-    --text-display-lg: clamp(2.25rem, 5vw, 4rem);
-    --text-display-md: clamp(1.75rem, 3.2vw, 2.5rem);
-    --text-display-sm: clamp(1.375rem, 2vw, 1.75rem);
-    --text-lede: clamp(1.0625rem, 1.4vw, 1.25rem);
+    /* Radius: sm inputs and tags, md buttons, lg cards and image frames,
+       pill offer badges only. */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+    --radius-pill: 999px;
 
-    --ease-quiet: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --shadow-product: 0 30px 40px -24px rgb(28 27 25 / 0.45);
 
-    /* Starter kit (admin) tokens, mapped to the same palette */
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+    --ease-quiet: cubic-bezier(0.2, 0.7, 0.2, 1);
 
+    /* Starter-kit (admin) tokens, mapped onto the brand palette. */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-card: var(--card);
@@ -73,56 +100,39 @@
 }
 
 :root {
-    --display-font: var(--font-fraunces), Georgia, 'Times New Roman', serif;
-    --body-font: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
-    --display-leading: 1.04;
-    --display-tracking: -0.022em;
-    --body-leading: 1.6;
-
-    --background: #fbfaf7;
-    --foreground: #1c1b19;
-    --card: #ffffff;
-    --card-foreground: #1c1b19;
-    --popover: #ffffff;
-    --popover-foreground: #1c1b19;
-    --primary: #1c1b19;
-    --primary-foreground: #f6f3ec;
-    --secondary: #f1ede4;
-    --secondary-foreground: #1c1b19;
-    --muted: #f1ede4;
-    --muted-foreground: #5c574e;
-    --accent: #ece7dc;
-    --accent-foreground: #1c1b19;
-    --destructive: #a3271b;
-    --destructive-foreground: #a3271b;
-    --border: #e2ddd2;
-    --input: #d6d0c3;
-    --ring: #2747d6;
-    --chart-1: #2747d6;
-    --chart-2: #1c1b19;
-    --chart-3: #8a5a3c;
-    --chart-4: #2f5d50;
-    --chart-5: #b9b2a3;
-    --radius: 0.375rem;
-    --sidebar: #f6f3ec;
-    --sidebar-foreground: #1c1b19;
-    --sidebar-primary: #1c1b19;
-    --sidebar-primary-foreground: #f6f3ec;
-    --sidebar-accent: #ece7dc;
-    --sidebar-accent-foreground: #1c1b19;
-    --sidebar-border: #e2ddd2;
-    --sidebar-ring: #2747d6;
-}
-
-/* Arabic sets in Amiri and IBM Plex Sans Arabic: taller script, no tracking. */
-html[lang='ar'] {
-    --display-font: var(--font-amiri), 'Geeza Pro', 'Times New Roman', serif;
-    --body-font:
-        var(--font-ibm-plex-sans-arabic), 'Geeza Pro', ui-sans-serif, system-ui,
-        sans-serif;
-    --display-leading: 1.28;
-    --display-tracking: 0;
-    --body-leading: 1.85;
+    --background: var(--paper);
+    --foreground: var(--ink);
+    --card: var(--paper-raised);
+    --card-foreground: var(--ink);
+    --popover: var(--paper-raised);
+    --popover-foreground: var(--ink);
+    --primary: var(--ink);
+    --primary-foreground: var(--paper);
+    --secondary: var(--sand-deep);
+    --secondary-foreground: var(--ink);
+    --muted: var(--sand-deep);
+    --muted-foreground: var(--ink-muted);
+    --accent: var(--sand-deep);
+    --accent-foreground: var(--ink);
+    --destructive: var(--danger);
+    --destructive-foreground: var(--danger);
+    --border: var(--sand);
+    --input: var(--sand);
+    --ring: var(--line);
+    --chart-1: var(--line);
+    --chart-2: var(--ink);
+    --chart-3: var(--warning);
+    --chart-4: var(--success);
+    --chart-5: var(--ink-muted);
+    --radius: 8px;
+    --sidebar: var(--paper);
+    --sidebar-foreground: var(--ink);
+    --sidebar-primary: var(--ink);
+    --sidebar-primary-foreground: var(--paper);
+    --sidebar-accent: var(--sand-deep);
+    --sidebar-accent-foreground: var(--ink);
+    --sidebar-border: var(--sand);
+    --sidebar-ring: var(--line);
 }
 
 @layer base {
@@ -131,24 +141,25 @@ html[lang='ar'] {
     }
 
     html {
-        background-color: var(--color-paper);
+        background-color: var(--paper);
         -webkit-text-size-adjust: 100%;
         scroll-behavior: smooth;
     }
 
     body {
         @apply bg-background text-foreground;
-        line-height: var(--body-leading);
+        font-size: 1rem;
+        line-height: 1.625rem;
     }
 
     ::selection {
-        background: var(--color-line);
-        color: var(--color-paper);
+        background: var(--line);
+        color: var(--on-line);
     }
 
     :focus-visible {
-        outline: 2px solid var(--color-line);
-        outline-offset: 3px;
+        outline: 2px solid var(--line);
+        outline-offset: 2px;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -168,91 +179,184 @@ html[lang='ar'] {
 
 @layer components {
     .site {
-        background: var(--color-paper);
-        color: var(--color-ink);
+        background: var(--paper);
+        color: var(--ink);
     }
 
+    /* Display face: Fraunces in English, Noto Naskh in Arabic. */
     .display {
         font-family: var(--display-font);
-        font-weight: 400;
-        line-height: var(--display-leading);
+        font-weight: var(--display-weight);
         letter-spacing: var(--display-tracking);
+        font-variation-settings: 'opsz' 144;
         text-wrap: balance;
     }
 
+    /* Overline: uppercase and tracked in English only. */
+    .overline {
+        font-size: var(--text-overline);
+        line-height: var(--text-overline--line-height);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--ink-muted);
+    }
+
+    :lang(ar) .overline,
+    [dir='rtl'] .overline {
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: var(--text-caption);
+    }
+
+    .price {
+        font-family: var(--body-font);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* Page frame: 1200px content, 64px margins on desktop, 20px on phones. */
     .wrap {
         width: 100%;
-        max-width: 84rem;
+        max-width: calc(1200px + 2 * var(--page-margin));
         margin-inline: auto;
-        padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+        padding-inline: var(--page-margin);
+        --page-margin: 20px;
+    }
+
+    @media (min-width: 64rem) {
+        .wrap {
+            --page-margin: 64px;
+        }
+    }
+
+    .section {
+        padding-block: 48px;
+    }
+
+    @media (min-width: 48rem) {
+        .section {
+            padding-block: 96px;
+        }
     }
 
     .measure {
         max-width: 38rem;
     }
 
-    /* The signature line. Draws from the reading edge once it scrolls into view. */
-    .ruled {
+    /* Ruled paper: sand lines at a 28px pitch. Lines, not a colour wash. */
+    .ruled-pattern {
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 27px,
+            var(--sand) 27px,
+            var(--sand) 28px
+        );
+    }
+
+    /* Signature line: 3px blue, draws from the reading edge on scroll. */
+    .signature-line {
         display: block;
-        height: 1px;
+        height: var(--stroke-signature);
         width: 100%;
-        background: currentColor;
-        transform-origin: inline-start;
-    }
-
-    html[dir='rtl'] .ruled {
-        transform-origin: right center;
-    }
-
-    html[dir='ltr'] .ruled {
+        background: var(--line);
         transform-origin: left center;
     }
 
-    .js .ruled[data-draw]:not([data-inview]) {
+    [dir='rtl'] .signature-line {
+        transform-origin: right center;
+    }
+
+    .js .signature-line[data-draw]:not([data-inview]) {
         transform: scaleX(0);
     }
 
-    .js .ruled[data-draw] {
-        transition: transform 1.4s var(--ease-quiet);
+    .js .signature-line[data-draw] {
+        transition: transform 600ms var(--ease-out-brand);
     }
 
-    /* Below-the-fold reveal. Content is visible without JavaScript. */
+    /* Ruled line: 1.5px ink, the "write here" line. */
+    .ruled-line {
+        display: block;
+        height: var(--stroke-rule);
+        width: 100%;
+        background: var(--ink);
+    }
+
+    /* Scroll reveal: fade and a 16px rise. Visible without JavaScript. */
     .js [data-reveal]:not([data-inview]) {
         opacity: 0;
-        transform: translateY(14px);
+        transform: translateY(16px);
     }
 
     .js [data-reveal] {
         transition:
-            opacity 0.9s var(--ease-quiet),
-            transform 0.9s var(--ease-quiet);
+            opacity 600ms var(--ease-out-brand),
+            transform 600ms var(--ease-out-brand);
     }
 
-    /* Links underline with the line, drawn from the reading edge. */
+    /* Tertiary link: ink text, blue underline that extends on hover. */
     .link-line {
-        background-image: linear-gradient(currentColor, currentColor);
+        background-image: linear-gradient(var(--line), var(--line));
         background-repeat: no-repeat;
-        background-size: 0% 1px;
+        background-size: 0% var(--stroke-rule);
         background-position: 0 100%;
-        transition: background-size 0.5s var(--ease-quiet);
-        padding-bottom: 2px;
+        transition: background-size 300ms var(--ease-out-brand);
+        padding-bottom: 6px;
     }
 
-    html[dir='rtl'] .link-line {
+    [dir='rtl'] .link-line {
         background-position: 100% 100%;
     }
 
     .link-line:hover,
-    .link-line:focus-visible,
-    .link-line[aria-current='page'],
-    .link-line[data-active='true'] {
-        background-size: 100% 1px;
+    .link-line:focus-visible {
+        background-size: 100% var(--stroke-rule);
     }
 
-    /* Long-form content from the admin editor. */
+    .link-line[aria-current='page'],
+    .link-line[data-active='true'] {
+        background-size: 100% var(--stroke-signature);
+    }
+
+    /* Field focus: ink border plus the blue signature line under the field. */
+    .field {
+        position: relative;
+        display: block;
+    }
+
+    .field::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        bottom: -5px;
+        height: var(--stroke-signature);
+        background: var(--line);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 300ms var(--ease-out-brand);
+    }
+
+    [dir='rtl'] .field::after {
+        transform-origin: right center;
+    }
+
+    .field:focus-within::after {
+        transform: scaleX(1);
+    }
+
+    /* Nib bullet for "what's inside" lists. */
+    .nib-list > li {
+        position: relative;
+        padding-inline-start: 1.75rem;
+    }
+
+    /* Long-form content from the admin editor: 680px column, body-l. */
     .prose-sattr {
-        font-size: 1.0625rem;
-        max-width: 40rem;
+        font-size: var(--text-body-l);
+        line-height: var(--text-body-l--line-height);
+        max-width: 680px;
     }
 
     .prose-sattr > * + * {
@@ -261,23 +365,26 @@ html[lang='ar'] {
 
     .prose-sattr h2 {
         font-family: var(--display-font);
-        font-size: var(--text-display-sm);
-        line-height: var(--display-leading);
+        font-weight: var(--display-weight);
         letter-spacing: var(--display-tracking);
-        margin-top: 2.25em;
+        font-size: var(--fs-display-m);
+        line-height: var(--lh-display-m);
+        margin-top: 2em;
     }
 
     .prose-sattr h3 {
+        font-size: var(--text-title);
+        line-height: var(--text-title--line-height);
         font-weight: 600;
-        font-size: 1.125rem;
         margin-top: 1.75em;
     }
 
     .prose-sattr a {
-        color: var(--color-line);
+        color: var(--ink);
         text-decoration: underline;
-        text-underline-offset: 3px;
-        text-decoration-thickness: 1px;
+        text-decoration-color: var(--line);
+        text-decoration-thickness: var(--stroke-rule);
+        text-underline-offset: 6px;
     }
 
     .prose-sattr ul,
@@ -297,27 +404,68 @@ html[lang='ar'] {
         margin-top: 0.4em;
     }
 
+    /* Pull quote: display face under the blue signature line. */
     .prose-sattr blockquote {
-        border-inline-start: 1px solid var(--color-line);
-        padding-inline-start: 1.25em;
+        border-top: var(--stroke-signature) solid var(--line);
+        padding-top: 1.25rem;
+        margin-block: 2.5rem;
         font-family: var(--display-font);
-        font-size: 1.25rem;
+        font-weight: var(--display-weight);
+        font-size: 1.75rem;
+        line-height: 1.35;
     }
 
     .prose-sattr img {
         width: 100%;
         height: auto;
+        border-radius: var(--radius-lg);
     }
 
-    .skeleton-line {
-        background: var(--color-stone);
-        animation: skeleton 1.6s ease-in-out infinite;
+    /* Skeleton: a sand-deep block with a slow opacity pulse. No shimmer. */
+    .skeleton {
+        background: var(--sand-deep);
+        border-radius: var(--radius-sm);
+        animation: skeleton-pulse 1.6s ease-in-out infinite;
     }
 
-    @keyframes skeleton {
-        50% {
-            opacity: 0.45;
-        }
+    /* Nib loader: the line draws under the nib, on repeat. */
+    .nib-loader-line {
+        transform-origin: left center;
+        transform-box: fill-box;
+        animation: nib-draw 1.4s var(--ease-out-brand) infinite;
+    }
+
+    .nib-loader-once .nib-loader-line {
+        animation: nib-draw 900ms var(--ease-out-brand) 1 both;
+    }
+
+    /* Admin: same tokens and fonts, sans only. */
+    .admin .display {
+        font-family: var(--body-font);
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+}
+
+@keyframes draw {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+@keyframes nib-draw {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes skeleton-pulse {
+    50% {
+        opacity: 0.5;
     }
 }
 
@@ -325,11 +473,5 @@ html[lang='ar'] {
     @page {
         size: A6;
         margin: 6mm;
-    }
-}
-
-@keyframes draw {
-    from {
-        transform: scaleX(0);
     }
 }

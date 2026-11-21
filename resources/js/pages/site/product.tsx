@@ -83,16 +83,16 @@ export default function ProductPage({
                             onMessage={setMessage}
                             heading={
                                 <div>
-                                    <h1 className="display text-display-lg">
+                                    <h1 className="display text-display-l">
                                         {product.name}
                                     </h1>
-                                    <p className="mt-3 text-lede text-ink-soft">
+                                    <p className="mt-3 text-body-l text-ink-muted">
                                         {product.tagline}
                                     </p>
                                     {rating && (
                                         <a
                                             href="#reviews"
-                                            className="mt-4 flex items-center gap-3 text-sm text-ink-soft"
+                                            className="mt-4 flex items-center gap-3 text-sm text-ink-muted"
                                         >
                                             <Rating
                                                 rating={rating.value}
@@ -118,7 +118,7 @@ export default function ProductPage({
 
             <section
                 aria-labelledby="about-title"
-                className="wrap py-16 md:py-24"
+                className="wrap py-12 md:py-24"
             >
                 <SectionHeading
                     id="about-title"
@@ -130,19 +130,17 @@ export default function ProductPage({
                         {product.contents.map((item) => (
                             <div
                                 key={item.title}
-                                className="border-b border-stone py-5 first:border-t"
+                                className="border-b border-sand py-5 first:border-t"
                             >
-                                <dt className="display text-display-sm">
-                                    {item.title}
-                                </dt>
-                                <dd className="mt-1 text-ink-soft">
+                                <dt className="text-title">{item.title}</dt>
+                                <dd className="mt-1 text-ink-muted">
                                     {item.detail}
                                 </dd>
                             </div>
                         ))}
                     </dl>
                     <div>
-                        <h2 className="text-sm font-medium">
+                        <h2 className="text-sm font-semibold">
                             {t('product.specs')}
                         </h2>
                         <table className="mt-4 w-full text-start text-[0.9375rem]">
@@ -150,11 +148,11 @@ export default function ProductPage({
                                 {product.specs.map((spec) => (
                                     <tr
                                         key={spec.label}
-                                        className="border-b border-stone first:border-t"
+                                        className="border-b border-sand first:border-t"
                                     >
                                         <th
                                             scope="row"
-                                            className="py-4 pe-4 text-start font-normal text-ink-soft"
+                                            className="py-4 pe-4 text-start font-normal text-ink-muted"
                                         >
                                             {spec.label}
                                         </th>
@@ -171,7 +169,7 @@ export default function ProductPage({
                 <section
                     id="reviews"
                     aria-labelledby="reviews-title"
-                    className="wrap scroll-mt-8 py-16 md:py-24"
+                    className="wrap scroll-mt-8 py-12 md:py-24"
                 >
                     <SectionHeading
                         id="reviews-title"
@@ -189,7 +187,7 @@ export default function ProductPage({
             {faqs.length > 0 && (
                 <section
                     aria-labelledby="faq-title"
-                    className="wrap py-16 md:py-24"
+                    className="wrap py-12 md:py-24"
                 >
                     <SectionHeading
                         id="faq-title"
@@ -204,7 +202,7 @@ export default function ProductPage({
             {articles.length > 0 && (
                 <section
                     aria-labelledby="related-title"
-                    className="wrap py-16 md:py-24"
+                    className="wrap py-12 md:py-24"
                 >
                     <SectionHeading
                         id="related-title"

@@ -241,7 +241,7 @@ export default function Dashboard({
                                     </span>
                                     <span
                                         aria-hidden
-                                        className="h-1 rounded-full bg-stone"
+                                        className="h-1 rounded-full bg-sand"
                                     >
                                         <span
                                             className="block h-full rounded-full bg-ink"
@@ -295,7 +295,7 @@ export default function Dashboard({
                                     </span>
                                     <span
                                         aria-hidden
-                                        className="h-1 rounded-full bg-stone"
+                                        className="h-1 rounded-full bg-sand"
                                     >
                                         <span
                                             className={cn(

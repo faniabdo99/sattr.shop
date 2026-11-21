@@ -1,5 +1,5 @@
 import { Cta } from '@/components/site/cta';
-import { RuledLine } from '@/components/site/ruled-line';
+import { SignatureLine } from '@/components/brand/SignatureLine';
 import { useSite, useT } from '@/hooks/use-t';
 
 type Props = {
@@ -19,14 +19,14 @@ export default function StaticPage({ page }: Props) {
     return (
         <article className="wrap py-12 md:py-20">
             <header className="max-w-3xl">
-                <h1 className="display text-display-xl">{page.title}</h1>
+                <h1 className="display text-display-l">{page.title}</h1>
                 {page.excerpt && (
-                    <p className="mt-5 text-lede text-ink-soft">
+                    <p className="mt-5 text-body-l text-ink-muted">
                         {page.excerpt}
                     </p>
                 )}
             </header>
-            <RuledLine className="mt-10 md:mt-14" />
+            <SignatureLine className="mt-8 max-w-24" />
             {page.body && (
                 <div
                     className="prose-sattr mt-10 md:mt-14"
@@ -46,7 +46,7 @@ export default function StaticPage({ page }: Props) {
                 </div>
             )}
             {page.updated && page.key !== 'about' && page.key !== 'contact' && (
-                <p className="mt-14 text-sm text-ink-soft">
+                <p className="mt-14 text-sm text-ink-muted">
                     {t('page.updated', { date: page.updated })}
                 </p>
             )}

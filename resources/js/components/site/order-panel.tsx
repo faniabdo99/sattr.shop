@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react';
+import { Badge } from '@/components/brand/Badge';
 import { Cta } from '@/components/site/cta';
 import { DesignPicker } from '@/components/site/design-picker';
 import { TextAreaField } from '@/components/site/fields';
-import { useT } from '@/hooks/use-t';
+import { useSite, useT } from '@/hooks/use-t';
+import { localDigits } from '@/lib/money';
 import type { Design, Product } from '@/types/site';
 
 export function checkoutUrl(
@@ -23,23 +25,34 @@ export function checkoutUrl(
     return url.toString();
 }
 
+/** "InstaPay −10%" / "إنستاباي −١٠٪" */
+export function useInstapayBadge(product: Product): string {
+    const t = useT();
+    const { locale } = useSite();
+
+    return t('product.instapay_badge', {
+        percent: localDigits(product.discount_percent, locale),
+    });
+}
+
 export function PriceBlock({ product }: { product: Product }) {
     const t = useT();
+    const badge = useInstapayBadge(product);
 
     return (
-        <dl className="grid grid-cols-2 border-y border-stone">
-            <div className="py-4 pe-4">
-                <dt className="text-sm text-ink-soft">{t('product.price')}</dt>
-                <dd className="mt-1 text-xl">{product.price_label}</dd>
-            </div>
-            <div className="border-s border-stone py-4 ps-4">
-                <dt className="flex flex-wrap items-center gap-x-2 text-sm text-ink-soft">
-                    {t('product.instapay_price')}
-                    <span className="bg-line px-2 py-0.5 text-xs font-medium text-paper">
-                        {t('product.save', { amount: product.saving_label })}
-                    </span>
+        <dl className="grid grid-cols-2 rounded-lg border border-sand bg-paper-raised">
+            <div className="p-4">
+                <dt className="text-caption text-ink-muted">
+                    {t('product.price')}
                 </dt>
-                <dd className="mt-1 text-xl text-line">
+                <dd className="price mt-1 text-title">{product.price_label}</dd>
+            </div>
+            <div className="border-s border-sand p-4">
+                <dt className="flex flex-wrap items-center gap-2 text-caption text-ink-muted">
+                    {t('product.instapay_price')}
+                    <Badge>{badge}</Badge>
+                </dt>
+                <dd className="price mt-1 text-title">
                     {product.instapay_label}
                 </dd>
             </div>
@@ -120,7 +133,7 @@ export function OrderPanel({
                             : t('cta.order_pack')}
                     </Cta>
                 )}
-                <p className="mt-3 text-sm text-ink-soft">
+                <p className="mt-3 text-caption text-ink-muted">
                     {design && !design.sold_out && design.stock <= 5
                         ? t('product.in_stock_few', { count: design.stock })
                         : t('product.free_delivery')}

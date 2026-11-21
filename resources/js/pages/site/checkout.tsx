@@ -1,17 +1,21 @@
 import { Link, useForm } from '@inertiajs/react';
+import { Minus, Plus } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import type { FormEvent } from 'react';
+import type { FormEvent, ReactNode } from 'react';
+import { Badge } from '@/components/brand/Badge';
+import { Button } from '@/components/brand/Button';
+import { SignatureLine } from '@/components/brand/SignatureLine';
 import { DesignPicker } from '@/components/site/design-picker';
 import {
     SelectField,
     TextAreaField,
     TextField,
 } from '@/components/site/fields';
-import { CoverPreview } from '@/components/site/personalizer';
+import { useInstapayBadge } from '@/components/site/order-panel';
+import { RadioCard } from '@/components/site/radio-card';
 import { useSite, useT } from '@/hooks/use-t';
-import { formatMoney } from '@/lib/money';
+import { formatMoney, localDigits } from '@/lib/money';
 import { track } from '@/lib/track';
-import { cn } from '@/lib/utils';
 import type { Design, Product } from '@/types/site';
 
 type PaymentOption = {
@@ -42,25 +46,23 @@ declare global {
     }
 }
 
+/** A checkout section, opened by the signature line. */
 function Step({
-    number,
+    id,
     title,
     children,
 }: {
-    number: number;
+    id: string;
     title: string;
-    children: React.ReactNode;
+    children: ReactNode;
 }) {
     return (
-        <section
-            aria-labelledby={`step-${number}`}
-            className="border-t border-stone py-10"
-        >
-            <h2 id={`step-${number}`} className="flex items-baseline gap-4">
-                <span className="text-sm text-line tabular-nums">{number}</span>
-                <span className="display text-display-md">{title}</span>
+        <section aria-labelledby={id} className="pt-12">
+            <SignatureLine className="max-w-24" />
+            <h2 id={id} className="display mt-6 text-display-m">
+                {title}
             </h2>
-            <div className="mt-8 flex flex-col gap-8">{children}</div>
+            <div className="mt-6 flex flex-col gap-6">{children}</div>
         </section>
     );
 }
@@ -76,6 +78,7 @@ export default function Checkout({
 }: Props) {
     const t = useT();
     const { site, locale } = useSite();
+    const badge = useInstapayBadge(product);
     const available = designs.filter((design) => !design.sold_out);
     const initial =
         available.find((design) => design.key === preset.design) ??
@@ -202,12 +205,15 @@ export default function Checkout({
 
     if (!initial) {
         return (
-            <div className="wrap py-24">
-                <h1 className="display text-display-lg">
+            <div className="wrap section">
+                <h1 className="display text-display-l">
                     {t('checkout.sold_out_notice')}
                 </h1>
                 <p className="mt-6">
-                    <Link href={site.home} className="link-line">
+                    <Link
+                        href={site.home}
+                        className="link-line !bg-[length:100%_1.5px] text-label"
+                    >
                         {t('not_found.home')}
                     </Link>
                 </p>
@@ -216,447 +222,379 @@ export default function Checkout({
     }
 
     return (
-        <form
-            onSubmit={submit}
-            noValidate
-            className="wrap pt-8 pb-36 md:pt-14 lg:pb-24"
-        >
-            <h1 className="display text-display-lg">{t('checkout.title')}</h1>
+        <form onSubmit={submit} noValidate className="wrap pt-12 pb-24">
+            <div className="mx-auto max-w-[640px]">
+                <h1 className="display text-display-l">
+                    {t('checkout.title')}
+                </h1>
 
-            {errorCount > 0 && (
-                <div
-                    id="checkout-errors"
-                    role="alert"
-                    className="mt-8 border-s-2 border-danger ps-4 text-danger"
-                >
-                    <p className="font-medium">{t('checkout.errors_title')}</p>
-                    {general && <p className="mt-1">{general}</p>}
-                </div>
-            )}
+                {errorCount > 0 && (
+                    <div
+                        id="checkout-errors"
+                        role="alert"
+                        className="mt-6 rounded-sm border border-danger bg-paper-raised p-4 text-danger"
+                    >
+                        <p className="text-label">
+                            {t('checkout.errors_title')}
+                        </p>
+                        {general && (
+                            <p className="mt-1 text-caption">{general}</p>
+                        )}
+                    </div>
+                )}
 
-            <div className="mt-8 grid gap-x-8 lg:grid-cols-12">
-                <div className="lg:col-span-7">
-                    <Step number={1} title={t('checkout.section_pack')}>
-                        <DesignPicker
-                            designs={designs}
-                            value={data.design}
-                            onChange={(key) => {
-                                setData('design', key);
-                                track('select_design', { design: key });
-                            }}
-                            legend={t('product.choose_design')}
-                            error={errors.design}
-                        />
-                        <div>
-                            <span
-                                id="quantity-label"
-                                className="text-sm font-medium"
-                            >
-                                {t('checkout.quantity')}
-                            </span>
-                            <div
-                                className="mt-3 flex items-center gap-1"
-                                role="group"
-                                aria-labelledby="quantity-label"
-                            >
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setData(
-                                            'quantity',
-                                            Math.max(1, quantity - 1),
-                                        )
-                                    }
-                                    disabled={quantity <= 1}
-                                    aria-label="−"
-                                    className="size-12 border border-ink/25 text-xl disabled:opacity-35"
-                                >
-                                    −
-                                </button>
-                                <output
-                                    aria-live="polite"
-                                    className="flex size-12 items-center justify-center text-lg tabular-nums"
-                                >
-                                    {quantity}
-                                </output>
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setData(
-                                            'quantity',
-                                            Math.min(
-                                                maxForDesign,
-                                                quantity + 1,
-                                            ),
-                                        )
-                                    }
-                                    disabled={quantity >= maxForDesign}
-                                    aria-label="+"
-                                    className="size-12 border border-ink/25 text-xl disabled:opacity-35"
-                                >
-                                    +
-                                </button>
-                            </div>
-                            {errors.quantity ? (
-                                <p className="mt-2 text-sm text-danger">
-                                    {errors.quantity}
-                                </p>
-                            ) : (
-                                design &&
-                                design.stock <= max_quantity && (
-                                    <p className="mt-2 text-sm text-ink-soft">
-                                        {t('checkout.only_left', {
-                                            count: design.stock,
-                                        })}
-                                    </p>
-                                )
-                            )}
-                        </div>
-                        <TextAreaField
-                            label={t('product.gift_message')}
-                            optional={t('product.optional')}
-                            placeholder={t('product.gift_message_placeholder')}
-                            counter={`${data.gift_message.length}/200`}
-                            maxLength={200}
-                            value={data.gift_message}
-                            onChange={(event) =>
-                                setData('gift_message', event.target.value)
-                            }
-                            error={errors.gift_message}
-                        />
-                    </Step>
-
-                    <Step number={2} title={t('checkout.section_delivery')}>
-                        <TextField
-                            label={t('checkout.full_name')}
-                            name="name"
-                            autoComplete="name"
-                            required
-                            value={data.customer_name}
-                            onChange={(event) =>
-                                setData('customer_name', event.target.value)
-                            }
-                            error={errors.customer_name}
-                        />
-                        <div className="grid gap-8 sm:grid-cols-2">
-                            <TextField
-                                label={t('checkout.phone')}
-                                hint={t('checkout.phone_hint')}
-                                name="tel"
-                                type="tel"
-                                inputMode="numeric"
-                                autoComplete="tel-national"
-                                dir="ltr"
-                                placeholder="01XXXXXXXXX"
-                                maxLength={16}
-                                required
-                                value={data.phone}
-                                onChange={(event) =>
-                                    setData('phone', event.target.value)
-                                }
-                                error={errors.phone}
-                            />
-                            <TextField
-                                label={t('checkout.alt_phone')}
-                                optional={t('product.optional')}
-                                type="tel"
-                                inputMode="numeric"
-                                dir="ltr"
-                                maxLength={16}
-                                value={data.alt_phone}
-                                onChange={(event) =>
-                                    setData('alt_phone', event.target.value)
-                                }
-                                error={errors.alt_phone}
-                            />
-                        </div>
-                        <TextField
-                            label={t('checkout.email')}
-                            optional={t('product.optional')}
-                            hint={t('checkout.email_hint')}
-                            name="email"
-                            type="email"
-                            inputMode="email"
-                            autoComplete="email"
-                            dir="ltr"
-                            value={data.email}
-                            onChange={(event) =>
-                                setData('email', event.target.value)
-                            }
-                            error={errors.email}
-                        />
-                        <div className="grid gap-8 sm:grid-cols-2">
-                            <SelectField
-                                label={t('checkout.governorate')}
-                                name="governorate"
-                                autoComplete="address-level1"
-                                required
-                                value={data.governorate}
-                                onChange={(event) =>
-                                    setData('governorate', event.target.value)
-                                }
-                                error={errors.governorate}
-                            >
-                                <option value="" disabled>
-                                    {t('checkout.governorate_placeholder')}
-                                </option>
-                                {governorates.map((governorate) => (
-                                    <option
-                                        key={governorate.key}
-                                        value={governorate.key}
-                                    >
-                                        {governorate.name}
-                                    </option>
-                                ))}
-                            </SelectField>
-                            <TextField
-                                label={t('checkout.city')}
-                                name="city"
-                                autoComplete="address-level2"
-                                required
-                                value={data.city}
-                                onChange={(event) =>
-                                    setData('city', event.target.value)
-                                }
-                                error={errors.city}
-                            />
-                        </div>
-                        <TextField
-                            label={t('checkout.address')}
-                            name="address"
-                            autoComplete="street-address"
-                            placeholder={t('checkout.address_placeholder')}
-                            required
-                            value={data.address}
-                            onChange={(event) =>
-                                setData('address', event.target.value)
-                            }
-                            error={errors.address}
-                        />
-                        <TextAreaField
-                            label={t('checkout.notes')}
-                            optional={t('product.optional')}
-                            rows={2}
-                            maxLength={500}
-                            value={data.notes}
-                            onChange={(event) =>
-                                setData('notes', event.target.value)
-                            }
-                            error={errors.notes}
-                        />
-                        {/* Honeypot: hidden from people, tempting to bots. */}
+                <Step id="step-pack" title={t('checkout.section_pack')}>
+                    <DesignPicker
+                        designs={designs}
+                        value={data.design}
+                        onChange={(key) => {
+                            setData('design', key);
+                            track('select_design', { design: key });
+                        }}
+                        legend={t('product.choose_design')}
+                        error={errors.design}
+                    />
+                    <div>
+                        <span
+                            id="quantity-label"
+                            className="text-label text-ink-muted"
+                        >
+                            {t('checkout.quantity')}
+                        </span>
                         <div
-                            aria-hidden="true"
-                            className="absolute -start-[9999px] h-0 w-0 overflow-hidden"
+                            className="mt-2 flex items-center gap-2"
+                            role="group"
+                            aria-labelledby="quantity-label"
                         >
-                            <label>
-                                {t('checkout.honeypot')}
-                                <input
-                                    type="text"
-                                    name="website"
-                                    tabIndex={-1}
-                                    autoComplete="off"
-                                    value={data.website}
-                                    onChange={(event) =>
-                                        setData('website', event.target.value)
-                                    }
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setData(
+                                        'quantity',
+                                        Math.max(1, quantity - 1),
+                                    )
+                                }
+                                disabled={quantity <= 1}
+                                aria-label="−"
+                                className="flex size-12 items-center justify-center rounded-sm border border-sand bg-paper-raised hover:border-ink disabled:opacity-40"
+                            >
+                                <Minus
+                                    size={20}
+                                    strokeWidth={1.5}
+                                    aria-hidden="true"
                                 />
-                            </label>
+                            </button>
+                            <output
+                                aria-live="polite"
+                                className="price flex size-12 items-center justify-center text-body-l"
+                            >
+                                {localDigits(quantity, locale)}
+                            </output>
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setData(
+                                        'quantity',
+                                        Math.min(maxForDesign, quantity + 1),
+                                    )
+                                }
+                                disabled={quantity >= maxForDesign}
+                                aria-label="+"
+                                className="flex size-12 items-center justify-center rounded-sm border border-sand bg-paper-raised hover:border-ink disabled:opacity-40"
+                            >
+                                <Plus
+                                    size={20}
+                                    strokeWidth={1.5}
+                                    aria-hidden="true"
+                                />
+                            </button>
                         </div>
-                    </Step>
-
-                    <Step number={3} title={t('checkout.section_payment')}>
-                        <fieldset>
-                            <legend className="sr-only">
-                                {t('checkout.section_payment')}
-                            </legend>
-                            <div className="flex flex-col gap-3">
-                                {payment_options.map((item) => {
-                                    const selected =
-                                        item.key === data.payment_method;
-
-                                    return (
-                                        <label
-                                            key={item.key}
-                                            className={cn(
-                                                'flex cursor-pointer items-start gap-4 border p-5 transition-colors duration-300',
-                                                selected
-                                                    ? 'border-line'
-                                                    : 'border-ink/20 hover:border-ink/50',
-                                            )}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="payment_method"
-                                                value={item.key}
-                                                checked={selected}
-                                                onChange={() =>
-                                                    choosePayment(item.key)
-                                                }
-                                                className="peer sr-only"
-                                            />
-                                            <span
-                                                aria-hidden="true"
-                                                className={cn(
-                                                    'mt-1 flex size-5 shrink-0 items-center justify-center rounded-full border peer-focus-visible:ring-2 peer-focus-visible:ring-line peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-paper',
-                                                    selected
-                                                        ? 'border-line'
-                                                        : 'border-ink/40',
-                                                )}
-                                            >
-                                                {selected && (
-                                                    <span className="size-2.5 rounded-full bg-line" />
-                                                )}
-                                            </span>
-                                            <span className="flex-1">
-                                                <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                                    <span className="text-lg font-medium">
-                                                        {t(
-                                                            `checkout.${item.key}`,
-                                                        )}
-                                                    </span>
-                                                    {item.saving > 0 && (
-                                                        <>
-                                                            <span className="bg-line px-2 py-0.5 text-xs font-medium text-paper">
-                                                                {t(
-                                                                    'product.save',
-                                                                    {
-                                                                        amount: item.saving_label,
-                                                                    },
-                                                                )}
-                                                            </span>
-                                                            <span className="text-sm text-ink-soft">
-                                                                {t(
-                                                                    'checkout.recommended',
-                                                                )}
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                </span>
-                                                <span className="mt-1 block text-ink-soft">
-                                                    {t(
-                                                        `checkout.${item.key}_body`,
-                                                    )}
-                                                </span>
-                                            </span>
-                                            <span className="text-lg tabular-nums">
-                                                {formatMoney(
-                                                    item.unit_price * quantity,
-                                                    locale,
-                                                )}
-                                            </span>
-                                        </label>
-                                    );
-                                })}
-                            </div>
-                            {errors.payment_method && (
-                                <p className="mt-3 text-sm text-danger">
-                                    {errors.payment_method}
+                        {errors.quantity ? (
+                            <p className="mt-2 text-caption text-danger">
+                                {errors.quantity}
+                            </p>
+                        ) : (
+                            design &&
+                            design.stock <= max_quantity && (
+                                <p className="mt-2 text-caption text-ink-muted">
+                                    {t('checkout.only_left', {
+                                        count: localDigits(
+                                            design.stock,
+                                            locale,
+                                        ),
+                                    })}
                                 </p>
-                            )}
-                        </fieldset>
-                        {site.turnstileSiteKey && <div ref={turnstileRef} />}
-                    </Step>
-                </div>
+                            )
+                        )}
+                    </div>
+                    <TextAreaField
+                        label={t('product.gift_message')}
+                        optional={t('product.optional')}
+                        placeholder={t('product.gift_message_placeholder')}
+                        counter={`${data.gift_message.length}/200`}
+                        maxLength={200}
+                        value={data.gift_message}
+                        onChange={(event) =>
+                            setData('gift_message', event.target.value)
+                        }
+                        error={errors.gift_message}
+                    />
+                </Step>
 
-                <aside
-                    aria-labelledby="summary-title"
-                    className="lg:col-span-4 lg:col-start-9"
-                >
-                    <div className="border-t border-stone pt-10 lg:sticky lg:top-8 lg:border-t-0 lg:pt-10">
-                        <h2
-                            id="summary-title"
-                            className="display text-display-md"
+                <Step id="step-delivery" title={t('checkout.section_delivery')}>
+                    <TextField
+                        label={t('checkout.full_name')}
+                        name="name"
+                        autoComplete="name"
+                        required
+                        value={data.customer_name}
+                        onChange={(event) =>
+                            setData('customer_name', event.target.value)
+                        }
+                        error={errors.customer_name}
+                    />
+                    <div className="grid gap-6 sm:grid-cols-2">
+                        <TextField
+                            label={t('checkout.phone')}
+                            hint={t('checkout.phone_hint')}
+                            name="tel"
+                            type="tel"
+                            inputMode="numeric"
+                            autoComplete="tel-national"
+                            dir="ltr"
+                            placeholder="01XXXXXXXXX"
+                            maxLength={16}
+                            required
+                            value={data.phone}
+                            onChange={(event) =>
+                                setData('phone', event.target.value)
+                            }
+                            error={errors.phone}
+                        />
+                        <TextField
+                            label={t('checkout.alt_phone')}
+                            optional={t('product.optional')}
+                            type="tel"
+                            inputMode="numeric"
+                            dir="ltr"
+                            maxLength={16}
+                            value={data.alt_phone}
+                            onChange={(event) =>
+                                setData('alt_phone', event.target.value)
+                            }
+                            error={errors.alt_phone}
+                        />
+                    </div>
+                    <TextField
+                        label={t('checkout.email')}
+                        optional={t('product.optional')}
+                        hint={t('checkout.email_hint')}
+                        name="email"
+                        type="email"
+                        inputMode="email"
+                        autoComplete="email"
+                        dir="ltr"
+                        value={data.email}
+                        onChange={(event) =>
+                            setData('email', event.target.value)
+                        }
+                        error={errors.email}
+                    />
+                    <div className="grid gap-6 sm:grid-cols-2">
+                        <SelectField
+                            label={t('checkout.governorate')}
+                            name="governorate"
+                            autoComplete="address-level1"
+                            required
+                            value={data.governorate}
+                            onChange={(event) =>
+                                setData('governorate', event.target.value)
+                            }
+                            error={errors.governorate}
                         >
+                            <option value="" disabled>
+                                {t('checkout.governorate_placeholder')}
+                            </option>
+                            {governorates.map((governorate) => (
+                                <option
+                                    key={governorate.key}
+                                    value={governorate.key}
+                                >
+                                    {governorate.name}
+                                </option>
+                            ))}
+                        </SelectField>
+                        <TextField
+                            label={t('checkout.city')}
+                            name="city"
+                            autoComplete="address-level2"
+                            required
+                            value={data.city}
+                            onChange={(event) =>
+                                setData('city', event.target.value)
+                            }
+                            error={errors.city}
+                        />
+                    </div>
+                    <TextField
+                        label={t('checkout.address')}
+                        name="address"
+                        autoComplete="street-address"
+                        placeholder={t('checkout.address_placeholder')}
+                        required
+                        value={data.address}
+                        onChange={(event) =>
+                            setData('address', event.target.value)
+                        }
+                        error={errors.address}
+                    />
+                    <TextAreaField
+                        label={t('checkout.notes')}
+                        optional={t('product.optional')}
+                        rows={2}
+                        maxLength={500}
+                        value={data.notes}
+                        onChange={(event) =>
+                            setData('notes', event.target.value)
+                        }
+                        error={errors.notes}
+                    />
+                    {/* Honeypot: hidden from people, tempting to bots. */}
+                    <div
+                        aria-hidden="true"
+                        className="absolute -start-[9999px] h-0 w-0 overflow-hidden"
+                    >
+                        <label>
+                            {t('checkout.honeypot')}
+                            <input
+                                type="text"
+                                name="website"
+                                tabIndex={-1}
+                                autoComplete="off"
+                                value={data.website}
+                                onChange={(event) =>
+                                    setData('website', event.target.value)
+                                }
+                            />
+                        </label>
+                    </div>
+                </Step>
+
+                <Step id="step-payment" title={t('checkout.section_payment')}>
+                    <fieldset>
+                        <legend className="sr-only">
+                            {t('checkout.section_payment')}
+                        </legend>
+                        <div className="flex flex-col gap-3">
+                            {payment_options.map((item) => (
+                                <RadioCard
+                                    key={item.key}
+                                    name="payment_method"
+                                    value={item.key}
+                                    checked={item.key === data.payment_method}
+                                    onChange={() => choosePayment(item.key)}
+                                >
+                                    <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                                        <span className="text-body-l font-semibold">
+                                            {t(`checkout.${item.key}`)}
+                                        </span>
+                                        {item.saving > 0 && (
+                                            <Badge>{badge}</Badge>
+                                        )}
+                                    </span>
+                                    <span className="mt-1 block text-ink-muted">
+                                        {t(`checkout.${item.key}_body`)}
+                                    </span>
+                                    <span className="price mt-3 block text-body-l">
+                                        {formatMoney(
+                                            item.unit_price * quantity,
+                                            locale,
+                                        )}
+                                    </span>
+                                </RadioCard>
+                            ))}
+                        </div>
+                        {errors.payment_method && (
+                            <p className="mt-3 text-caption text-danger">
+                                {errors.payment_method}
+                            </p>
+                        )}
+                    </fieldset>
+                    {site.turnstileSiteKey && <div ref={turnstileRef} />}
+                </Step>
+
+                <section aria-labelledby="summary-title" className="pt-12">
+                    <SignatureLine className="max-w-24" />
+                    <div className="mt-6 rounded-lg border border-sand bg-paper-raised p-4 md:p-6">
+                        <h2 id="summary-title" className="text-title">
                             {t('checkout.summary')}
                         </h2>
-                        {design && (
-                            <CoverPreview
-                                design={design}
-                                className="mt-6 max-w-64 lg:max-w-none"
-                            />
-                        )}
-                        <dl className="mt-6 text-[0.9375rem]">
-                            <div className="flex justify-between border-t border-stone py-3">
-                                <dt className="text-ink-soft">
-                                    {product.name} × {quantity}
+                        <dl className="mt-4">
+                            <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                <dt className="text-ink-muted">
+                                    {product.name}
+                                    {design ? `, ${design.name}` : ''} ×{' '}
+                                    {localDigits(quantity, locale)}
                                 </dt>
-                                <dd className="tabular-nums">
+                                <dd className="price">
                                     {formatMoney(subtotal, locale)}
                                 </dd>
                             </div>
                             {discount > 0 && (
-                                <div className="flex justify-between border-t border-stone py-3 text-line">
-                                    <dt>{t('checkout.discount')}</dt>
-                                    <dd className="tabular-nums">
+                                <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                    <dt className="text-ink-muted">
+                                        {t('checkout.discount')}
+                                    </dt>
+                                    <dd className="price">
                                         −{formatMoney(discount, locale)}
                                     </dd>
                                 </div>
                             )}
-                            <div className="flex justify-between border-t border-stone py-3">
-                                <dt className="text-ink-soft">
+                            <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                <dt className="text-ink-muted">
                                     {t('checkout.delivery')}
                                 </dt>
-                                <dd>{t('checkout.free')}</dd>
+                                <dd className="font-semibold">
+                                    {t('checkout.free')}
+                                </dd>
                             </div>
-                            <div className="flex items-baseline justify-between border-y border-ink py-4">
-                                <dt className="font-medium">
+                            <div className="flex items-baseline justify-between gap-6 border-t-[1.5px] border-ink pt-4">
+                                <dt className="text-label">
                                     {t('checkout.total')}
                                 </dt>
                                 <dd
-                                    className="text-2xl tabular-nums"
+                                    className="price text-title"
                                     aria-live="polite"
                                 >
                                     {formatMoney(total, locale)}
                                 </dd>
                             </div>
                         </dl>
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="mt-6 hidden min-h-14 w-full items-center justify-center bg-line px-8 font-medium text-paper transition-colors duration-300 hover:bg-line-deep disabled:bg-stone disabled:text-ink-soft lg:flex"
-                        >
-                            {processing
-                                ? t('checkout.placing')
-                                : t('checkout.place_order')}
-                        </button>
-                        {terms && (
-                            <p className="mt-4 text-sm text-ink-soft">
-                                {t('checkout.terms')}{' '}
-                                <Link
-                                    href={terms.url}
-                                    className="underline underline-offset-4"
-                                >
-                                    {terms.title}
-                                </Link>
-                                .
-                            </p>
-                        )}
                     </div>
-                </aside>
-            </div>
 
-            {/* One-hand submit on phones */}
-            <div className="fixed inset-x-0 bottom-0 z-30 border-t border-stone bg-paper pb-[env(safe-area-inset-bottom)] lg:hidden">
-                <div className="flex items-center justify-between gap-4 px-5 py-3">
-                    <p className="leading-tight">
-                        <span className="block text-sm text-ink-soft">
-                            {t('checkout.total')}
-                        </span>
-                        <span className="text-lg font-medium tabular-nums">
-                            {formatMoney(total, locale)}
-                        </span>
-                    </p>
-                    <button
+                    <Button
                         type="submit"
+                        full
                         disabled={processing}
-                        className="flex min-h-12 items-center bg-line px-8 font-medium text-paper disabled:bg-stone disabled:text-ink-soft"
+                        className="mt-6"
                     >
                         {processing
                             ? t('checkout.placing')
                             : t('checkout.place_order')}
-                    </button>
-                </div>
+                    </Button>
+                    {terms && (
+                        <p className="mt-4 text-caption text-ink-muted">
+                            {t('checkout.terms')}{' '}
+                            <Link
+                                href={terms.url}
+                                className="text-ink underline decoration-line decoration-[1.5px] underline-offset-4"
+                            >
+                                {terms.title}
+                            </Link>
+                            .
+                        </p>
+                    )}
+                </section>
             </div>
         </form>
     );

@@ -33,7 +33,7 @@ export function ConsentBanner() {
         <section
             role="dialog"
             aria-label={t('consent.title')}
-            className="fixed inset-x-0 bottom-0 z-50 border-t border-ink bg-paper"
+            className="fixed inset-x-0 bottom-0 z-50 border-t border-sand bg-paper-raised"
         >
             <div className="wrap flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
                 <p className="max-w-2xl text-sm">
@@ -48,14 +48,14 @@ export function ConsentBanner() {
                     <button
                         type="button"
                         onClick={() => choose('denied')}
-                        className="min-h-11 flex-1 border border-ink/30 px-5 text-sm font-medium hover:border-ink md:flex-none"
+                        className="h-12 flex-1 rounded-md border-[1.5px] border-ink px-6 text-label hover:bg-ink hover:text-paper md:flex-none"
                     >
                         {t('consent.decline')}
                     </button>
                     <button
                         type="button"
                         onClick={() => choose('granted')}
-                        className="min-h-11 flex-1 bg-ink px-5 text-sm font-medium text-paper hover:bg-line md:flex-none"
+                        className="h-12 flex-1 rounded-md bg-line px-6 text-label text-on-line hover:bg-line-hover md:flex-none"
                     >
                         {t('consent.accept')}
                     </button>

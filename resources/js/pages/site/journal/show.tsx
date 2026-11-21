@@ -26,8 +26,8 @@ export default function JournalShow({
     return (
         <>
             <article className="wrap py-10 md:py-16">
-                <header className="mx-auto max-w-3xl">
-                    <p className="text-sm text-ink-soft">
+                <header className="mx-auto max-w-[680px]">
+                    <p className="text-sm text-ink-muted">
                         <Link href={site.journal} className="link-line">
                             {t('journal.title')}
                         </Link>
@@ -45,15 +45,15 @@ export default function JournalShow({
                             </>
                         )}
                     </p>
-                    <h1 className="display mt-5 text-display-lg">
+                    <h1 className="display mt-5 text-display-l">
                         {article.title}
                     </h1>
                     {article.excerpt && (
-                        <p className="mt-5 text-lede text-ink-soft">
+                        <p className="mt-5 text-body-l text-ink-muted">
                             {article.excerpt}
                         </p>
                     )}
-                    <p className="mt-6 flex flex-wrap gap-x-5 border-t border-stone pt-4 text-sm text-ink-soft">
+                    <p className="mt-6 flex flex-wrap gap-x-5 border-t border-sand pt-4 text-sm text-ink-muted">
                         {article.author && (
                             <span>
                                 {t('journal.by', { author: article.author })}
@@ -84,12 +84,12 @@ export default function JournalShow({
 
                 {article.body && (
                     <div
-                        className="prose-sattr mx-auto mt-10 max-w-3xl md:mt-14"
+                        className="prose-sattr mx-auto mt-10 max-w-[680px] md:mt-14"
                         dangerouslySetInnerHTML={{ __html: article.body }}
                     />
                 )}
 
-                <aside className="mx-auto mt-16 max-w-3xl border-y border-stone py-8">
+                <aside className="mx-auto mt-16 max-w-[680px] border-y border-sand py-8">
                     <div className="flex items-center gap-6">
                         {faculty && (
                             <div className="w-20 shrink-0">
@@ -97,12 +97,12 @@ export default function JournalShow({
                             </div>
                         )}
                         <div className="flex-1">
-                            <p className="text-sm text-ink-soft">
+                            <p className="text-sm text-ink-muted">
                                 {faculty
                                     ? t('journal.faculty_block')
                                     : t('journal.product_block_title')}
                             </p>
-                            <p className="display mt-1 text-display-sm">
+                            <p className="mt-1 text-title">
                                 <Link
                                     href={faculty?.url ?? product.url}
                                     className="link-line"
@@ -110,7 +110,7 @@ export default function JournalShow({
                                     {faculty?.title ?? product.tagline}
                                 </Link>
                             </p>
-                            <p className="mt-2 text-ink-soft">
+                            <p className="mt-2 text-ink-muted">
                                 {product.price_label},{' '}
                                 {t('product.instapay_price')}{' '}
                                 {product.instapay_label}
@@ -130,7 +130,7 @@ export default function JournalShow({
             {related.length > 0 && (
                 <section
                     aria-labelledby="related-title"
-                    className="wrap py-16 md:py-24"
+                    className="wrap py-12 md:py-24"
                 >
                     <SectionHeading
                         id="related-title"

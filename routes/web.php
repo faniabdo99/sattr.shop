@@ -13,8 +13,11 @@ use App\Http\Controllers\Site\ReviewController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Controllers\Site\SitemapController;
 use App\Services\NotFoundPage;
+use App\Services\Seo\SeoBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
+use Inertia\Inertia;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
 use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 
@@ -57,5 +60,25 @@ Route::prefix('{locale}')
             ->middleware([CacheResponse::class, 'cache.headers:public;max_age=60;etag'])
             ->name('page');
     });
+
+// Brand styleguide: local development only.
+if (app()->isLocal()) {
+    Route::get('styleguide', function (Request $request) {
+        $locale = $request->query('lang') === 'en' ? 'en' : 'ar';
+
+        app()->setLocale($locale);
+        URL::defaults(['locale' => $locale]);
+        $request->attributes->set('storefront', true);
+
+        return Inertia::render('site/styleguide', [
+            'seo' => app(SeoBuilder::class)->make(
+                title: 'Styleguide',
+                description: null,
+                alternates: ['ar' => url('/styleguide'), 'en' => url('/styleguide?lang=en')],
+                noindex: true,
+            )->toArray(),
+        ]);
+    })->name('styleguide');
+}
 
 Route::fallback(fn (Request $request) => app(NotFoundPage::class)->response($request));

@@ -29,7 +29,10 @@ export function Picture({
 }: Props) {
     return (
         <div
-            className={cn('relative overflow-hidden bg-paper-deep', className)}
+            className={cn(
+                'relative overflow-hidden rounded-lg bg-sand-deep',
+                className,
+            )}
             style={{ aspectRatio: ratio }}
         >
             {image ? (
@@ -63,7 +66,7 @@ export function Picture({
                     />
                 </picture>
             ) : (
-                <div className="absolute inset-3 flex items-center justify-center border border-ink/10 sm:inset-4">
+                <div className="absolute inset-0 flex items-center justify-center">
                     {fallback}
                 </div>
             )}

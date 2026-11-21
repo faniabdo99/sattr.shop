@@ -20,13 +20,13 @@ export function ArticleCard({ article }: { article: Article }) {
                     sizes="(min-width: 768px) 33vw, 100vw"
                     imgClassName="transition-transform duration-[1200ms] ease-quiet group-hover:scale-[1.03]"
                     fallback={
-                        <span className="display text-display-sm text-ink/25">
+                        <span className="text-title text-ink/25">
                             {t('brand')}
                         </span>
                     }
                 />
             </Link>
-            <p className="mt-5 text-sm text-ink-soft">
+            <p className="mt-5 text-sm text-ink-muted">
                 {article.category?.name}
                 {article.category && article.published_label ? ' / ' : ''}
                 {article.published_at && (
@@ -35,15 +35,15 @@ export function ArticleCard({ article }: { article: Article }) {
                     </time>
                 )}
             </p>
-            <h3 className="display mt-2 text-display-sm">
+            <h3 className="mt-2 text-title">
                 <Link href={article.url} className="link-line">
                     {article.title}
                 </Link>
             </h3>
             {article.excerpt && (
-                <p className="mt-3 text-ink-soft">{article.excerpt}</p>
+                <p className="mt-3 text-ink-muted">{article.excerpt}</p>
             )}
-            <p className="mt-3 text-sm text-ink-soft">
+            <p className="mt-3 text-sm text-ink-muted">
                 {t('journal.reading_time', {
                     minutes: article.reading_minutes,
                 })}

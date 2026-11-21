@@ -1,12 +1,16 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { RuledLine } from '@/components/brand/RuledLine';
+import { editionOverline } from '@/components/site/design-picker';
 import { Notebook } from '@/components/site/notebook';
 import { Picture } from '@/components/site/picture';
 import { useT } from '@/hooks/use-t';
+import { cn } from '@/lib/utils';
 import type { Design } from '@/types/site';
 
 /**
- * The notebook cover for the chosen faculty design. Uses the uploaded cover
- * mock-up when there is one, otherwise the drawn notebook.
+ * The notebook cover for the chosen edition on a sand-deep frame, with a
+ * crossfade when the edition changes. Uses the uploaded cover mock-up when
+ * there is one, otherwise the drawn notebook.
  */
 export function CoverPreview({
     design,
@@ -21,18 +25,14 @@ export function CoverPreview({
 
     return (
         <div className={className}>
-            <div className="relative bg-paper-deep px-[16%] py-[10%]">
-                <span className="absolute inset-3 border border-ink/10 sm:inset-4" />
+            <div className="relative overflow-hidden rounded-lg bg-sand-deep px-[18%] py-[10%]">
                 <AnimatePresence mode="popLayout" initial={false}>
                     <motion.div
                         key={design.key}
                         initial={reduce ? false : { opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={reduce ? undefined : { opacity: 0 }}
-                        transition={{
-                            duration: 0.7,
-                            ease: [0.22, 0.61, 0.36, 1],
-                        }}
+                        transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
                         className="relative"
                     >
                         {design.cover ? (
@@ -40,19 +40,21 @@ export function CoverPreview({
                                 image={{ ...design.cover, alt: label }}
                                 ratio="5 / 7"
                                 sizes="(min-width: 1024px) 30vw, 70vw"
+                                className="rounded-sm shadow-product"
                             />
                         ) : (
                             <Notebook
                                 designKey={design.key}
                                 tint={design.tint}
+                                overline={editionOverline(design)}
                                 label={label}
-                                className="drop-shadow-[0_18px_24px_rgba(28,27,25,0.18)]"
+                                className="drop-shadow-[0_30px_24px_rgb(28_27_25_/_0.28)]"
                             />
                         )}
                     </motion.div>
                 </AnimatePresence>
             </div>
-            <p className="mt-3 text-sm text-ink-soft" aria-live="polite">
+            <p className="mt-3 text-caption text-ink-muted" aria-live="polite">
                 {design.name}
                 {design.motif ? `: ${design.motif}` : ''}
             </p>
@@ -60,20 +62,41 @@ export function CoverPreview({
     );
 }
 
-/** The message card that travels in the box. */
-export function MessageCard({ message }: { message: string }) {
+/** The To/From card that travels in the box, written on ruled lines. */
+export function MessageCard({
+    message,
+    className,
+}: {
+    message: string;
+    className?: string;
+}) {
     const t = useT();
+    const text = message.trim();
 
     return (
-        <div className="border border-stone bg-[#FBFAF7] p-6 sm:p-8">
-            <p className="display min-h-24 text-xl leading-relaxed whitespace-pre-line text-ink">
-                {message.trim() || (
-                    <span className="text-ink/30">
-                        {t('product.gift_message_placeholder')}
-                    </span>
-                )}
+        <div
+            className={cn(
+                'rounded-lg border border-sand bg-paper-raised p-4 md:p-6',
+                className,
+            )}
+        >
+            <p className="text-caption text-ink-muted">
+                {t('product.card_to')}
             </p>
-            <span className="mt-6 block h-px w-16 bg-line" />
+            <RuledLine className="mt-5" />
+            <p
+                className={cn(
+                    'display mt-5 min-h-21 text-xl leading-9 whitespace-pre-line',
+                    text ? 'text-ink' : 'text-ink-muted',
+                )}
+            >
+                {text || t('product.gift_message_placeholder')}
+            </p>
+            <RuledLine />
+            <p className="mt-4 text-caption text-ink-muted">
+                {t('product.card_from')}
+            </p>
+            <RuledLine className="mt-5 max-w-40" />
         </div>
     );
 }

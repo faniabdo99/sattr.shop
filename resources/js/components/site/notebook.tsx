@@ -1,33 +1,43 @@
 import { cn } from '@/lib/utils';
 
 /**
- * A drawn A5 notebook cover in the faculty's colour, with its line motif.
+ * A drawn A5 notebook for one faculty edition: paper cover, ink spine, the
+ * edition's overline, its line motif in the edition colour, and the mark
+ * with the blue line at the foot.
  */
 
 const MOTIFS: Record<string, string> = {
     // One line drawing per faculty. viewBox is 0 0 200 280.
     medical:
-        'M24 150 H72 L82 150 L90 128 L100 176 L110 112 L120 162 L128 150 H176',
+        'M40 150 H78 L86 150 L92 130 L100 174 L108 116 L116 162 L122 150 H168',
     engineering:
-        'M36 190 H164 M36 190 V110 M36 110 L100 78 L164 110 M164 110 V190 M100 78 V190 M24 204 H176',
+        'M48 186 H160 M48 186 V116 M48 116 L104 88 L160 116 M160 116 V186 M104 88 V186',
     pharmacy:
-        'M100 96 L130 113 V147 L100 164 L70 147 V113 Z M130 113 L154 99 M70 147 L46 161 M100 164 V190',
-    dentistry: 'M52 112 C52 196 78 204 100 204 C122 204 148 196 148 112',
-    law: 'M100 92 V196 M60 112 H140 M60 112 L46 150 H74 Z M140 112 L126 150 H154 Z M78 196 H122',
-    business: 'M30 190 C70 188 92 170 110 140 C126 114 146 96 172 92',
-    arts: 'M34 160 C60 120 84 190 108 150 C128 118 150 134 168 126',
-    'computer-science': 'M32 150 H150 M160 136 V164',
+        'M104 100 L130 115 V145 L104 160 L78 145 V115 Z M130 115 L150 103 M78 145 L58 157 M104 160 V182',
+    dentistry: 'M62 112 C62 186 84 194 104 194 C124 194 146 186 146 112',
+    law: 'M104 96 V188 M68 114 H140 M68 114 L56 148 H80 Z M140 114 L128 148 H152 Z M86 188 H122',
+    business: 'M44 184 C80 182 98 166 114 140 C128 118 146 102 166 98',
+    arts: 'M46 158 C68 124 90 184 110 150 C128 122 148 136 164 128',
+    'computer-science': 'M46 150 H150 M160 138 V162',
 };
 
 type Props = {
     designKey: string;
     tint: string;
+    /** Shown small at the top of the cover, e.g. "MEDICAL · طب". */
+    overline?: string;
     className?: string;
     /** Accessible description; omit when purely decorative. */
     label?: string;
 };
 
-export function Notebook({ designKey, tint, className, label }: Props) {
+export function Notebook({
+    designKey,
+    tint,
+    overline,
+    className,
+    label,
+}: Props) {
     const motif = MOTIFS[designKey] ?? MOTIFS.arts;
 
     return (
@@ -38,37 +48,71 @@ export function Notebook({ designKey, tint, className, label }: Props) {
             aria-hidden={label ? undefined : true}
             className={cn('h-auto w-full', className)}
         >
-            {/* page block peeking out on the fore edge */}
-            <rect x="12" y="10" width="180" height="264" fill="#EFEADF" />
+            {/* page block on the fore edge */}
+            <rect
+                x="12"
+                y="10"
+                width="182"
+                height="264"
+                rx="3"
+                fill="#E2DDD2"
+            />
+            {/* paper cover */}
             <rect
                 x="8"
                 y="6"
-                width="180"
+                width="182"
                 height="264"
-                fill={tint}
-                style={{
-                    transition: 'fill 0.7s cubic-bezier(0.22,0.61,0.36,1)',
-                }}
+                rx="3"
+                fill="#FBFAF6"
+                stroke="#E2DDD2"
+                strokeWidth="1"
             />
-            {/* spine */}
-            <rect
-                x="8"
-                y="6"
-                width="12"
-                height="264"
-                fill="#000"
-                opacity="0.14"
+            {/* ink spine */}
+            <path
+                d="M11 6 H26 V270 H11 A3 3 0 0 1 8 267 V9 A3 3 0 0 1 11 6 Z"
+                fill="#1C1B19"
             />
+            {overline && (
+                <text
+                    x="108"
+                    y="44"
+                    textAnchor="middle"
+                    fill="#55524C"
+                    fontSize="7"
+                    fontWeight="600"
+                    letterSpacing="0.6"
+                    style={{ fontFamily: 'var(--body-font)' }}
+                >
+                    {overline}
+                </text>
+            )}
             <path
                 key={designKey}
                 d={motif}
                 fill="none"
-                stroke="#F6F3EC"
-                strokeWidth="1.1"
+                stroke={tint}
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                opacity="0.9"
+                style={{
+                    transition: 'stroke 400ms cubic-bezier(0.2,0.7,0.2,1)',
+                }}
             />
+            {/* small mark at the foot: nib over the blue line */}
+            <g transform="translate(97 226) scale(0.18)">
+                <path
+                    fillRule="evenodd"
+                    fill="#1C1B19"
+                    d="M60 96 L38 54 C38 36 48 24 60 14 C72 24 82 36 82 54 Z M60 46 a6 6 0 1 0 0.01 0 Z"
+                />
+                <path
+                    d="M10 104 H110"
+                    stroke="#2747D6"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                />
+            </g>
         </svg>
     );
 }

@@ -3,9 +3,9 @@ import { cn } from '@/lib/utils';
 type Tone = 'neutral' | 'info' | 'ok' | 'warn' | 'danger';
 
 const tones: Record<Tone, string> = {
-    neutral: 'border-stone bg-transparent text-ink-soft',
+    neutral: 'border-sand bg-transparent text-ink-muted',
     info: 'border-line/30 bg-line/5 text-line',
-    ok: 'border-ok/30 bg-ok/5 text-ok',
+    ok: 'border-success/30 bg-success/5 text-success',
     warn: 'border-[#8a5a3c]/30 bg-[#8a5a3c]/5 text-[#8a5a3c]',
     danger: 'border-danger/30 bg-danger/5 text-danger',
 };

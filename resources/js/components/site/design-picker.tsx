@@ -1,5 +1,5 @@
+import { RadioCard } from '@/components/site/radio-card';
 import { useT } from '@/hooks/use-t';
-import { cn } from '@/lib/utils';
 import type { Design } from '@/types/site';
 
 type Props = {
@@ -11,7 +11,12 @@ type Props = {
     error?: string;
 };
 
-/** Faculty choice as a radio group of colour chips. */
+/** "MEDICAL · طب": the edition named in both languages. */
+export function editionOverline(design: Design): string {
+    return `${design.names.en} · ${design.names.ar}`;
+}
+
+/** Faculty edition choice as a grid of radio cards. */
 export function DesignPicker({
     designs,
     value,
@@ -24,51 +29,43 @@ export function DesignPicker({
 
     return (
         <fieldset aria-describedby={error ? `${name}-error` : undefined}>
-            <legend className="mb-3 text-sm font-medium">{legend}</legend>
-            <div className="grid grid-cols-2 gap-x-6 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
-                {designs.map((design) => {
-                    const selected = design.key === value;
-
-                    return (
-                        <label
-                            key={design.key}
-                            className={cn(
-                                'relative flex min-h-12 cursor-pointer items-center gap-3 border-b py-3 text-[0.9375rem] transition-colors duration-300',
-                                selected
-                                    ? 'border-line text-ink'
-                                    : 'border-stone text-ink-soft hover:text-ink',
-                                design.sold_out &&
-                                    'cursor-not-allowed opacity-55',
-                            )}
-                        >
-                            <input
-                                type="radio"
-                                name={name}
-                                value={design.key}
-                                checked={selected}
-                                disabled={design.sold_out}
-                                onChange={() => onChange(design.key)}
-                                className="peer sr-only"
-                            />
+            <legend className="mb-3 text-label text-ink-muted">{legend}</legend>
+            <div className="grid grid-cols-2 gap-3">
+                {designs.map((design) => (
+                    <RadioCard
+                        key={design.key}
+                        name={name}
+                        value={design.key}
+                        checked={design.key === value}
+                        disabled={design.sold_out}
+                        onChange={() => onChange(design.key)}
+                        className="!p-4"
+                    >
+                        <span className="flex items-center gap-3">
                             <span
                                 aria-hidden="true"
-                                className="size-4 shrink-0 rounded-full ring-1 ring-ink/15 ring-offset-2 ring-offset-paper peer-focus-visible:ring-2 peer-focus-visible:ring-line"
+                                className="size-3 shrink-0 rounded-full"
                                 style={{ backgroundColor: design.tint }}
                             />
-                            <span className="leading-tight">
-                                {design.name}
+                            <span className="min-w-0">
+                                <span className="block truncate text-label text-ink">
+                                    {design.name}
+                                </span>
                                 {design.sold_out && (
-                                    <span className="block text-xs text-ink-soft">
+                                    <span className="block text-caption text-ink-muted">
                                         {t('product.sold_out')}
                                     </span>
                                 )}
                             </span>
-                        </label>
-                    );
-                })}
+                        </span>
+                    </RadioCard>
+                ))}
             </div>
             {error && (
-                <p id={`${name}-error`} className="mt-3 text-sm text-danger">
+                <p
+                    id={`${name}-error`}
+                    className="mt-3 text-caption text-danger"
+                >
                     {error}
                 </p>
             )}

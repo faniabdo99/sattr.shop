@@ -17,7 +17,8 @@ return [
     ],
 
     'cta' => [
-        'order' => 'Order',
+        'order' => 'Order now',
+        'see_editions' => 'See the editions',
         'order_pack' => 'Order the pack',
         'order_design' => 'Order this design',
         'see_inside' => 'See what is inside',
@@ -26,7 +27,8 @@ return [
     ],
 
     'footer' => [
-        'tagline' => 'Desk essentials, printed and packed to order in Egypt.',
+        'tagline' => 'Every story starts with a line.',
+        'handle' => '@sattr.eg',
         'help' => 'Help',
         'contact' => 'Contact',
         'whatsapp' => 'WhatsApp',
@@ -42,8 +44,20 @@ return [
     ],
 
     'home' => [
-        'hero_title' => 'A gift that begins with a line',
-        'hero_body' => 'A notebook, a mug, four coasters and a pen in their faculty’s design. Boxed and delivered anywhere in Egypt.',
+        'hero_title' => 'Every story starts with a line.',
+        'hero_body' => 'A gift pack for college students, in their faculty’s edition.',
+        'over' => [
+            'contents' => 'What’s inside',
+            'unboxing' => 'The box',
+            'faculties' => 'Faculty editions',
+            'personal' => 'The message card',
+            'moments' => 'Occasions',
+            'assurance' => 'Payment and delivery',
+            'reviews' => 'Reviews',
+            'faq' => 'Questions',
+            'journal' => 'Journal',
+            'final' => 'The first line is yours.',
+        ],
         'hero_price' => ':price, delivery included',
         'hero_instapay' => ':price when you pay by InstaPay',
         'hero_alt' => 'Three Sattr notebooks in faculty colours',
@@ -68,7 +82,7 @@ return [
         ],
         'assurance_title' => 'Paying and receiving',
         'assurance' => [
-            ['title' => 'InstaPay saves :saving', 'body' => 'Pay by InstaPay transfer and the pack is :instapay instead of :price.'],
+            ['title' => 'Pay with InstaPay and save :percent%', 'body' => 'Pay by InstaPay transfer and the pack is :instapay instead of :price.'],
             ['title' => 'Cash on delivery', 'body' => 'Prefer to pay at the door? Available everywhere at :price.'],
             ['title' => 'Free delivery, all 27 governorates', 'body' => 'Shipped with Bosta. The courier calls before arriving.'],
             ['title' => 'Made to order', 'body' => 'Printed and packed in two to three working days, then two to five days in transit.'],
@@ -86,6 +100,8 @@ return [
         'instapay_price' => 'With InstaPay',
         'instapay_from' => 'With InstaPay',
         'save' => 'Save :amount',
+        'instapay_badge' => 'InstaPay −:percent%',
+        'card_to' => 'To',
         'free_delivery' => 'Free delivery across Egypt',
         'sold_out' => 'Sold out',
         'sold_out_all' => 'This run is sold out',
@@ -105,7 +121,7 @@ return [
         'reviews_summary' => ':value out of 5 from :count reviews',
         'related_title' => 'Read next',
         'faq_title' => 'Questions, answered',
-        'card_from' => 'With love,',
+        'card_from' => 'From',
     ],
 
     'faculty' => [
@@ -211,6 +227,9 @@ return [
         'proof_title' => 'Confirm your transfer',
         'proof_file' => 'Transfer screenshot',
         'proof_file_hint' => 'An image up to 5 MB.',
+        'proof_drop' => 'Choose the screenshot, or drop it here',
+        'proof_chosen' => 'Selected: :name',
+        'code_label' => 'Order number',
         'proof_reference' => 'Transaction reference',
         'proof_submit' => 'Send for confirmation',
         'proof_sending' => 'Sending',

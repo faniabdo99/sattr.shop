@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
+import { buttonClasses } from '@/components/brand/Button';
 import { ArticleCard } from '@/components/site/article-card';
-import { RuledLine } from '@/components/site/ruled-line';
+import { SignatureLine } from '@/components/brand/SignatureLine';
 import { useT } from '@/hooks/use-t';
 import type { ArticleCard as Article } from '@/types/site';
 
@@ -35,12 +36,12 @@ export default function JournalIndex({
         <div className="wrap py-12 md:py-20">
             <header className="grid gap-6 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-7">
-                    <h1 className="display text-display-xl">
+                    <h1 className="display text-display-l">
                         {search
                             ? t('journal.results_for', { query: search })
                             : heading}
                     </h1>
-                    <p className="measure mt-5 text-lede text-ink-soft">
+                    <p className="measure mt-5 text-body-l text-ink-muted">
                         {intro}
                     </p>
                 </div>
@@ -51,19 +52,19 @@ export default function JournalIndex({
                     className="flex items-end gap-4 self-end md:col-span-4 md:col-start-9"
                 >
                     <label className="flex-1">
-                        <span className="text-sm font-medium">
+                        <span className="text-label text-ink-muted">
                             {t('journal.search')}
                         </span>
                         <input
                             type="search"
                             name="q"
                             defaultValue={search}
-                            className="block w-full rounded-none border-0 border-b border-ink/30 bg-transparent px-0 pt-1.5 pb-2.5 focus:border-line focus:outline-none"
+                            className="mt-2 block h-12 w-full rounded-sm border border-sand bg-paper-raised px-4 focus:border-ink focus:outline-none"
                         />
                     </label>
                     <button
                         type="submit"
-                        className="min-h-11 border-b border-ink px-1 text-[0.9375rem] font-medium"
+                        className={buttonClasses('secondary')}
                     >
                         {t('journal.search_button')}
                     </button>
@@ -71,7 +72,7 @@ export default function JournalIndex({
             </header>
 
             <nav aria-label={t('journal.categories')} className="mt-12">
-                <RuledLine />
+                <SignatureLine className="max-w-24" />
                 <ul className="flex flex-wrap gap-x-8 gap-y-1 pt-4 text-[0.9375rem]">
                     <li>
                         <Link
@@ -100,7 +101,7 @@ export default function JournalIndex({
             </nav>
 
             {articles.length === 0 ? (
-                <p className="py-24 text-lede text-ink-soft">
+                <p className="py-24 text-body-l text-ink-muted">
                     {search ? t('journal.empty_search') : t('journal.empty')}
                 </p>
             ) : (
@@ -114,7 +115,7 @@ export default function JournalIndex({
             {pagination.last > 1 && (
                 <nav
                     aria-label="Pagination"
-                    className="mt-20 flex items-center justify-between border-t border-stone pt-6 text-[0.9375rem]"
+                    className="mt-20 flex items-center justify-between border-t border-sand pt-6 text-[0.9375rem]"
                 >
                     {pagination.prev ? (
                         <Link
@@ -127,7 +128,7 @@ export default function JournalIndex({
                     ) : (
                         <span />
                     )}
-                    <span className="text-ink-soft">
+                    <span className="text-ink-muted">
                         {t('journal.page_of', {
                             current: pagination.current,
                             last: pagination.last,

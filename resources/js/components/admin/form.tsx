@@ -184,7 +184,7 @@ export function CopyField({ label, value }: { label: string; value: string }) {
                     className="inline-flex h-8 shrink-0 items-center gap-1 rounded-md border border-input px-2 text-xs font-medium hover:bg-accent"
                 >
                     {copied ? (
-                        <Check className="size-3.5 text-ok" aria-hidden />
+                        <Check className="size-3.5 text-success" aria-hidden />
                     ) : (
                         <Copy className="size-3.5" aria-hidden />
                     )}

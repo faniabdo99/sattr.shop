@@ -64,6 +64,7 @@ final class Present
             'id' => $design->id,
             'key' => $design->key,
             'name' => $design->name,
+            'names' => ['ar' => $design->getTranslation('name', 'ar'), 'en' => $design->getTranslation('name', 'en')],
             'motif' => $design->motif,
             'tint' => $design->tint,
             'stock' => $design->stock,

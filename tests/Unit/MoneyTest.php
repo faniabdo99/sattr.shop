@@ -18,8 +18,8 @@ it('always rounds a discounted price down, never up', function (int $price, int 
 ]);
 
 it('formats amounts for each language', function () {
-    expect(Money::format(84900, 'en'))->toBe('EGP 849')
-        ->and(Money::format(76400, 'ar'))->toBe('764 ج.م')
+    expect(Money::format(84900, 'en'))->toBe('849 EGP')
+        ->and(Money::format(76400, 'ar'))->toBe('٧٦٤ ج.م')
         ->and(Money::decimal(84900))->toBe('849.00');
 });
 

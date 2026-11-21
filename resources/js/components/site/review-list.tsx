@@ -12,7 +12,7 @@ export function Rating({ rating, label }: { rating: number; label: string }) {
                     className={
                         n <= Math.round(rating)
                             ? 'h-0.5 w-5 bg-line'
-                            : 'h-0.5 w-5 bg-stone'
+                            : 'h-0.5 w-5 bg-sand'
                     }
                 />
             ))}
@@ -41,7 +41,7 @@ export function ReviewList({ reviews }: { reviews: Review[] }) {
                         <blockquote className="display mt-5 text-xl leading-snug">
                             {review.body}
                         </blockquote>
-                        <figcaption className="mt-4 text-sm text-ink-soft">
+                        <figcaption className="mt-4 text-sm text-ink-muted">
                             {review.name}
                             {review.date ? `, ${review.date}` : ''}
                         </figcaption>

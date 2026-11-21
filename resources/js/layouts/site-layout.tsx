@@ -100,7 +100,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
             <Head title={seo?.title} />
             <a
                 href="#main"
-                className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
+                className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
             >
                 {t('nav.skip')}
             </a>
@@ -110,7 +110,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
                 key={path}
                 initial={reduce || first.current ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, ease: [0.22, 0.61, 0.36, 1] }}
+                transition={{ duration: 0.4, ease: [0.2, 0.7, 0.2, 1] }}
                 className="flex-1"
             >
                 {children}

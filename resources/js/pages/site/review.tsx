@@ -1,7 +1,8 @@
 import { useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
+import { buttonClasses } from '@/components/brand/Button';
 import { TextAreaField, TextField } from '@/components/site/fields';
-import { RuledLine } from '@/components/site/ruled-line';
+import { SignatureLine } from '@/components/brand/SignatureLine';
 import { useT } from '@/hooks/use-t';
 import { cn } from '@/lib/utils';
 
@@ -33,10 +34,10 @@ export default function ReviewPage({
     if (done) {
         return (
             <div className="wrap py-20 md:py-32">
-                <h1 className="display text-display-lg">
+                <h1 className="display text-display-l">
                     {t('review.thanks_title')}
                 </h1>
-                <p className="measure mt-5 text-lede text-ink-soft">
+                <p className="measure mt-5 text-body-l text-ink-muted">
                     {t('review.thanks_body')}
                 </p>
             </div>
@@ -46,14 +47,14 @@ export default function ReviewPage({
     return (
         <div className="wrap py-12 md:py-20">
             <div className="max-w-2xl">
-                <h1 className="display text-display-lg">{t('review.title')}</h1>
-                <p className="mt-5 text-lede text-ink-soft">
+                <h1 className="display text-display-l">{t('review.title')}</h1>
+                <p className="mt-5 text-body-l text-ink-muted">
                     {t('review.body')}
                 </p>
                 {design && (
-                    <p className="mt-2 text-sm text-ink-soft">{design}</p>
+                    <p className="mt-2 text-sm text-ink-muted">{design}</p>
                 )}
-                <RuledLine className="mt-10" />
+                <SignatureLine className="mt-8 max-w-24" />
 
                 <form
                     onSubmit={submit}
@@ -61,7 +62,7 @@ export default function ReviewPage({
                     className="mt-10 flex flex-col gap-9"
                 >
                     <fieldset>
-                        <legend className="text-sm font-medium">
+                        <legend className="text-sm font-semibold">
                             {t('review.rating')}
                         </legend>
                         <div className="mt-3 flex gap-2">
@@ -69,10 +70,10 @@ export default function ReviewPage({
                                 <label
                                     key={value}
                                     className={cn(
-                                        'flex size-12 cursor-pointer items-center justify-center border text-lg tabular-nums transition-colors duration-300 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-line',
+                                        'flex size-12 cursor-pointer items-center justify-center rounded-sm border text-lg tabular-nums transition-colors duration-300 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-line',
                                         value <= form.data.rating
-                                            ? 'border-line bg-line text-paper'
-                                            : 'border-ink/25 text-ink-soft',
+                                            ? 'border-ink bg-ink text-paper'
+                                            : 'border-sand bg-paper-raised text-ink-muted',
                                     )}
                                 >
                                     <input
@@ -126,7 +127,7 @@ export default function ReviewPage({
                         <button
                             type="submit"
                             disabled={form.processing}
-                            className="min-h-13 bg-line px-8 font-medium text-paper transition-colors duration-300 hover:bg-line-deep disabled:bg-stone disabled:text-ink-soft"
+                            className={buttonClasses()}
                         >
                             {t('review.submit')}
                         </button>

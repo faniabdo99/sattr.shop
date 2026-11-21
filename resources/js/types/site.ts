@@ -14,6 +14,7 @@ export type Design = {
     id: number;
     key: string;
     name: string;
+    names: { ar: string; en: string };
     motif: string | null;
     tint: string;
     stock: number;

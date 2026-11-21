@@ -1,14 +1,13 @@
+import { Logo } from '@/components/brand/Logo';
+
 export default function AppLogo() {
     return (
         <>
-            <span
-                aria-hidden
-                className="hidden size-8 items-center justify-center rounded-md bg-sidebar-primary font-display text-lg leading-none text-sidebar-primary-foreground group-data-[collapsible=icon]:flex"
-            >
-                S
+            <span className="hidden group-data-[collapsible=icon]:inline-flex">
+                <Logo variant="mark" size={28} />
             </span>
-            <span className="px-1 font-display text-2xl leading-none tracking-tight group-data-[collapsible=icon]:hidden">
-                Sattr
+            <span className="inline-flex px-1 group-data-[collapsible=icon]:hidden">
+                <Logo variant="lockup" size={28} />
             </span>
         </>
     );

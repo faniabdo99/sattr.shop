@@ -1,0 +1,106 @@
+/*
+ | Sattr brand tokens.
+ |
+ | The default theme is "paper". Wrap a block in data-theme="ink" (footer,
+ | dark bands) and the same utilities resolve to the dark values, so inside
+ | an ink block you still write bg-paper / text-ink.
+ */
+
+:root,
+[data-theme='paper'] {
+    --paper: #f6f3ec;
+    --paper-raised: #ffffff;
+    --ink: #1c1b19;
+    --ink-muted: #55524c;
+    --sand: #e2ddd2;
+    --sand-deep: #e9e4d9;
+    --line: #2747d6;
+    --line-hover: #1e38ad;
+    --on-line: #ffffff;
+
+    --success: #2f7d4f;
+    --warning: #9a6200;
+    --danger: #b3261e;
+}
+
+[data-theme='ink'] {
+    --paper: #1c1b19;
+    --paper-raised: #26241f;
+    --ink: #f6f3ec;
+    --ink-muted: #cfcac0;
+    --sand: #3a3833;
+    --sand-deep: #2e2c28;
+    --line: #8ea0ff;
+    --line-hover: #a9b7ff;
+    --on-line: #1c1b19;
+
+    background-color: var(--paper);
+    color: var(--ink);
+}
+
+:root {
+    /* Strokes */
+    --stroke-hairline: 1px;
+    --stroke-rule: 1.5px;
+    --stroke-signature: 3px;
+
+    /* The only shadow in the system: under product mock-ups. */
+    --shadow-product: 0 30px 40px -24px rgb(28 27 25 / 0.45);
+
+    --ease-out-brand: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    /* Families. Arabic swaps these below, so components never branch on locale. */
+    --display-font: var(--font-fraunces), Georgia, 'Times New Roman', serif;
+    --display-weight: 400;
+    --display-tracking: -0.02em;
+    --body-font: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+
+    /* Type scale: mobile first, desktop from 48rem. */
+    --fs-display-xl: 3.5rem;
+    --lh-display-xl: 3.5rem;
+    --fs-display-l: 2.75rem;
+    --lh-display-l: 3rem;
+    --fs-display-m: 2rem;
+    --lh-display-m: 2.375rem;
+}
+
+@media (min-width: 48rem) {
+    :root {
+        --fs-display-xl: 6rem;
+        --lh-display-xl: 5.75rem;
+        --fs-display-l: 4rem;
+        --lh-display-l: 4rem;
+        --fs-display-m: 2.75rem;
+        --lh-display-m: 3rem;
+    }
+}
+
+/* Arabic: Naskh needs room. Headlines run at 1.4–1.5 line-height, no tracking. */
+:lang(ar),
+[dir='rtl'] {
+    --display-font: var(--font-noto-naskh-arabic), 'Geeza Pro', serif;
+    --display-weight: 600;
+    --display-tracking: 0;
+    --body-font:
+        var(--font-ibm-plex-sans-arabic), 'Geeza Pro', ui-sans-serif, system-ui,
+        sans-serif;
+
+    --fs-display-xl: 3rem;
+    --lh-display-xl: 4.25rem;
+    --fs-display-l: 2.5rem;
+    --lh-display-l: 3.75rem;
+    --fs-display-m: 1.875rem;
+    --lh-display-m: 2.75rem;
+}
+
+@media (min-width: 48rem) {
+    :lang(ar),
+    [dir='rtl'] {
+        --fs-display-xl: 4.5rem;
+        --lh-display-xl: 6.25rem;
+        --fs-display-l: 3.5rem;
+        --lh-display-l: 5rem;
+        --fs-display-m: 2.5rem;
+        --lh-display-m: 3.625rem;
+    }
+}

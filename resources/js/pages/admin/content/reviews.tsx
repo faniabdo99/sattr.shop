@@ -48,7 +48,7 @@ function Rating({ value }: { value: number }) {
                         'size-3.5',
                         step <= value
                             ? 'fill-ink text-ink'
-                            : 'fill-transparent text-stone',
+                            : 'fill-transparent text-sand',
                     )}
                 />
             ))}

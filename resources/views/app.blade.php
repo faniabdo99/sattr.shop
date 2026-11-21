@@ -26,7 +26,12 @@
             <link rel="preload" as="image" href="{{ $preload['href'] }}" @if (! empty($preload['srcset'])) imagesrcset="{{ $preload['srcset'] }}" imagesizes="{{ $preload['sizes'] ?? '100vw' }}" @endif @if (! empty($preload['type'])) type="{{ $preload['type'] }}" @endif fetchpriority="high">
         @endif
 
-        @fonts($locale === 'ar' ? ['amiri', 'ibm-plex-sans-arabic'] : ['fraunces', 'inter-tight'])
+        {{-- Each locale loads only its own two families; the styleguide shows both. --}}
+        @if (($page['component'] ?? '') === 'site/styleguide')
+            @fonts
+        @else
+            @fonts($locale === 'ar' ? ['noto-naskh-arabic', 'ibm-plex-sans-arabic'] : ['fraunces', 'inter-tight'])
+        @endif
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])

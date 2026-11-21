@@ -13,26 +13,26 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
             refresh: true,
             fonts: [
-                fontsource('Amiri', {
-                    weights: [400, 700],
-                    subsets: ['arabic', 'latin'],
-                    preload: [{ weight: 400 }],
+                fontsource('Noto Naskh Arabic', {
+                    weights: [600],
+                    subsets: ['arabic'],
+                    preload: [{ weight: 600 }],
                     fallbacks: ['Georgia', 'serif'],
                 }),
                 fontsource('IBM Plex Sans Arabic', {
-                    weights: [400, 500, 600],
+                    weights: [400, 600],
                     subsets: ['arabic', 'latin'],
                     preload: [{ weight: 400 }],
                     fallbacks: ['system-ui', 'sans-serif'],
                 }),
                 fontsource('Fraunces', {
-                    weights: [400, 500],
+                    weights: [400],
                     subsets: ['latin'],
                     preload: [{ weight: 400 }],
                     fallbacks: ['Georgia', 'serif'],
                 }),
                 fontsource('Inter Tight', {
-                    weights: [400, 500, 600],
+                    weights: [400, 600],
                     subsets: ['latin'],
                     preload: [{ weight: 400 }],
                     fallbacks: ['system-ui', 'sans-serif'],

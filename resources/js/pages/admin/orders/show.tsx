@@ -604,7 +604,7 @@ export default function OrderShow({
                                         <Button
                                             type="button"
                                             size="sm"
-                                            className="bg-line text-white hover:bg-line-deep"
+                                            className="bg-line text-white hover:bg-line-hover"
                                             disabled={verifying}
                                             onClick={verify}
                                         >

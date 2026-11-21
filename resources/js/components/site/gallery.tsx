@@ -75,14 +75,14 @@ export function Gallery({
                 {active && (
                     <div className="flex h-full flex-col">
                         <div className="flex items-center justify-between gap-6 px-5 py-4">
-                            <p className="text-sm text-ink-soft">
+                            <p className="text-sm text-ink-muted">
                                 {active.alt}
                             </p>
                             <button
                                 type="button"
                                 autoFocus
                                 onClick={() => dialog.current?.close()}
-                                className="min-h-11 px-3 text-sm font-medium underline underline-offset-4"
+                                className="min-h-11 px-3 text-sm font-semibold underline underline-offset-4"
                             >
                                 {t('product.close')}
                             </button>

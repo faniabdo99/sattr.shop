@@ -68,7 +68,7 @@ function ToolButton({
             onMouseDown={(event) => event.preventDefault()}
             onClick={onClick}
             className={cn(
-                'inline-flex size-8 items-center justify-center rounded-sm text-ink-soft hover:bg-accent hover:text-ink disabled:pointer-events-none disabled:opacity-40',
+                'inline-flex size-8 items-center justify-center rounded-sm text-ink-muted hover:bg-accent hover:text-ink disabled:pointer-events-none disabled:opacity-40',
                 active &&
                     'bg-line/10 text-line hover:bg-line/15 hover:text-line',
             )}

@@ -1,6 +1,8 @@
 import { Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { ArticleCard } from '@/components/site/article-card';
+import { SignatureLine } from '@/components/brand/SignatureLine';
+import { editionOverline } from '@/components/site/design-picker';
 import { Gallery } from '@/components/site/gallery';
 import { Notebook } from '@/components/site/notebook';
 import { OrderPanel, checkoutUrl } from '@/components/site/order-panel';
@@ -59,7 +61,7 @@ export default function FacultyPage({
         <>
             <nav
                 aria-label="Breadcrumb"
-                className="wrap pt-6 text-sm text-ink-soft"
+                className="wrap pt-6 text-sm text-ink-muted"
             >
                 <ol className="flex flex-wrap gap-x-2">
                     <li>
@@ -84,11 +86,13 @@ export default function FacultyPage({
 
             <div className="wrap grid gap-10 pt-8 pb-16 lg:grid-cols-12 lg:gap-8 lg:pt-12 lg:pb-28">
                 <div className="lg:col-span-7">
-                    <h1 className="display text-display-lg lg:text-display-xl">
-                        {page.title}
-                    </h1>
+                    <p className="mb-3 overline" dir="ltr">
+                        {editionOverline(design)}
+                    </p>
+                    <SignatureLine className="mb-6 max-w-24" draw={false} />
+                    <h1 className="display text-display-l">{page.title}</h1>
                     {page.excerpt && (
-                        <p className="measure mt-6 text-lede text-ink-soft">
+                        <p className="measure mt-6 text-body-l text-ink-muted">
                             {page.excerpt}
                         </p>
                     )}
@@ -116,26 +120,26 @@ export default function FacultyPage({
                             lockDesign
                             heading={
                                 <div>
-                                    <h2 className="display text-display-md">
+                                    <h2 className="display text-display-m">
                                         {t('faculty.product_name', {
                                             product: product.name,
                                             design: design.name,
                                         })}
                                     </h2>
-                                    <p className="mt-2 text-ink-soft">
+                                    <p className="mt-2 text-ink-muted">
                                         {product.tagline}
                                     </p>
                                 </div>
                             }
                         />
-                        <ul className="mt-8 border-t border-stone text-[0.9375rem]">
+                        <ul className="mt-8 border-t border-sand text-[0.9375rem]">
                             {product.contents.map((item) => (
                                 <li
                                     key={item.title}
-                                    className="flex justify-between gap-6 border-b border-stone py-3"
+                                    className="flex justify-between gap-6 border-b border-sand py-3"
                                 >
                                     <span>{item.title}</span>
-                                    <span className="text-end text-ink-soft">
+                                    <span className="text-end text-ink-muted">
                                         {item.detail}
                                     </span>
                                 </li>
@@ -153,7 +157,7 @@ export default function FacultyPage({
             {reviews.length > 0 && (
                 <section
                     aria-labelledby="reviews-title"
-                    className="wrap py-16 md:py-24"
+                    className="wrap py-12 md:py-24"
                 >
                     <SectionHeading
                         id="reviews-title"
@@ -166,7 +170,7 @@ export default function FacultyPage({
             {articles.length > 0 && (
                 <section
                     aria-labelledby="articles-title"
-                    className="wrap py-16 md:py-24"
+                    className="wrap py-12 md:py-24"
                 >
                     <SectionHeading
                         id="articles-title"
@@ -182,7 +186,7 @@ export default function FacultyPage({
 
             <section
                 aria-labelledby="others-title"
-                className="wrap py-16 md:py-24"
+                className="wrap py-12 md:py-24"
             >
                 <SectionHeading
                     id="others-title"
@@ -195,7 +199,7 @@ export default function FacultyPage({
                                 href={item.url ?? product.url}
                                 className="group block"
                             >
-                                <div className="bg-paper-deep px-[18%] py-[12%]">
+                                <div className="rounded-lg bg-sand-deep px-[18%] py-[12%]">
                                     <Notebook
                                         designKey={item.key}
                                         tint={item.tint}

@@ -1,17 +1,10 @@
 import { Link, usePage } from '@inertiajs/react';
+import { Menu, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { buttonClasses } from '@/components/brand/Button';
+import { Logo } from '@/components/brand/Logo';
 import { useSite, useT } from '@/hooks/use-t';
 import { cn } from '@/lib/utils';
-
-export function Wordmark({ className }: { className?: string }) {
-    const t = useT();
-
-    return (
-        <span className={cn('display text-[1.75rem] leading-none', className)}>
-            {t('brand')}
-        </span>
-    );
-}
 
 export function SiteHeader() {
     const t = useT();
@@ -20,11 +13,21 @@ export function SiteHeader() {
     const url = usePage().url;
     const [open, setOpen] = useState(false);
     const [lastUrl, setLastUrl] = useState(url);
+    const [scrolled, setScrolled] = useState(false);
 
     if (url !== lastUrl) {
         setLastUrl(url);
         setOpen(false);
     }
+
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 8);
+
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     useEffect(() => {
         document.body.style.overflow = open ? 'hidden' : '';
@@ -50,15 +53,28 @@ export function SiteHeader() {
         decodeURI(path).startsWith(decodeURI(new URL(href).pathname));
 
     return (
-        <header className="relative z-40 border-b border-stone bg-paper">
+        <header
+            className={cn(
+                'sticky top-0 z-40 border-b border-sand transition-colors duration-300',
+                scrolled && !open ? 'bg-paper/90 backdrop-blur-md' : 'bg-paper',
+            )}
+        >
             <div className="wrap flex h-16 items-center justify-between gap-6 md:h-20">
-                <Link href={site.home} aria-label={t('nav.home_label')}>
-                    <Wordmark />
+                <Link
+                    href={site.home}
+                    aria-label={t('nav.home_label')}
+                    className="inline-flex"
+                >
+                    <Logo
+                        variant={locale === 'ar' ? 'lockup-ar' : 'lockup'}
+                        size={34}
+                        labelled={false}
+                    />
                 </Link>
 
                 <nav
                     aria-label={t('nav.main')}
-                    className="hidden items-center gap-9 text-[0.9375rem] md:flex"
+                    className="hidden items-center gap-8 text-label md:flex"
                 >
                     {links.map((link) => (
                         <Link
@@ -74,7 +90,7 @@ export function SiteHeader() {
                     ))}
                 </nav>
 
-                <div className="flex items-center gap-5 text-[0.9375rem]">
+                <div className="flex items-center gap-4 text-label">
                     <a
                         href={otherUrl}
                         hrefLang={other}
@@ -85,13 +101,16 @@ export function SiteHeader() {
                     </a>
                     <Link
                         href={site.checkout}
-                        className="hidden min-h-11 items-center bg-ink px-6 font-medium text-paper transition-colors duration-300 hover:bg-line md:inline-flex"
+                        className={cn(
+                            buttonClasses('primary'),
+                            'hidden md:inline-flex',
+                        )}
                     >
                         {t('cta.order')}
                     </Link>
                     <button
                         type="button"
-                        className="-me-2 flex size-11 flex-col items-center justify-center gap-[7px] md:hidden"
+                        className="-me-2 flex size-11 items-center justify-center md:hidden"
                         aria-expanded={open}
                         aria-controls="mobile-menu"
                         onClick={() => setOpen(!open)}
@@ -99,20 +118,15 @@ export function SiteHeader() {
                         <span className="sr-only">
                             {open ? t('nav.close_menu') : t('nav.open_menu')}
                         </span>
-                        <span
-                            aria-hidden="true"
-                            className={cn(
-                                'h-px w-6 bg-ink transition-transform duration-500 ease-quiet',
-                                open && 'translate-y-1 rotate-45',
-                            )}
-                        />
-                        <span
-                            aria-hidden="true"
-                            className={cn(
-                                'h-px w-6 bg-ink transition-transform duration-500 ease-quiet',
-                                open && '-translate-y-1 -rotate-45',
-                            )}
-                        />
+                        {open ? (
+                            <X size={24} strokeWidth={1.5} aria-hidden="true" />
+                        ) : (
+                            <Menu
+                                size={24}
+                                strokeWidth={1.5}
+                                aria-hidden="true"
+                            />
+                        )}
                     </button>
                 </div>
             </div>
@@ -124,20 +138,18 @@ export function SiteHeader() {
             >
                 <nav
                     aria-label={t('nav.main')}
-                    className="wrap flex flex-col py-8"
+                    className="wrap flex flex-col py-6"
                 >
                     {links.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="display border-b border-stone py-5 text-display-md"
+                            className="display border-b border-sand py-4 text-display-m"
                         >
                             {link.label}
                         </Link>
                     ))}
-                    <p className="mt-10 mb-2 text-sm text-ink-soft">
-                        {t('nav.faculties')}
-                    </p>
+                    <p className="mt-8 mb-2 overline">{t('nav.faculties')}</p>
                     <ul className="grid grid-cols-2 gap-x-6">
                         {site.faculties.map((faculty) => (
                             <li key={faculty.url}>
@@ -150,6 +162,12 @@ export function SiteHeader() {
                             </li>
                         ))}
                     </ul>
+                    <Link
+                        href={site.checkout}
+                        className={cn(buttonClasses('primary', true), 'mt-8')}
+                    >
+                        {t('cta.order')}
+                    </Link>
                 </nav>
             </div>
         </header>

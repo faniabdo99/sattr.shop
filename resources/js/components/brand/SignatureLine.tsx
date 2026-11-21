@@ -2,10 +2,10 @@ import { useInView } from '@/hooks/use-in-view';
 import { cn } from '@/lib/utils';
 
 /**
- * The brand's signature: one thin horizontal rule. With `draw` it draws
- * itself from the reading edge when it scrolls into view.
+ * The 3px blue signature line. Draws from the reading edge the first time
+ * it scrolls into view (600ms); static with reduced motion or without JS.
  */
-export function RuledLine({
+export function SignatureLine({
     draw = true,
     className,
 }: {
@@ -19,7 +19,7 @@ export function RuledLine({
             ref={ref}
             aria-hidden="true"
             data-draw={draw ? '' : undefined}
-            className={cn('ruled text-line', className)}
+            className={cn('signature-line', className)}
         />
     );
 }

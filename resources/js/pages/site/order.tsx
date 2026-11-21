@@ -1,10 +1,14 @@
 import { useForm } from '@inertiajs/react';
+import { Check, Copy, Upload } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { FormEvent } from 'react';
+import type { DragEvent, FormEvent } from 'react';
+import { Button, buttonClasses } from '@/components/brand/Button';
+import { NibLoader } from '@/components/brand/Nib';
+import { SignatureLine } from '@/components/brand/SignatureLine';
 import { TextField } from '@/components/site/fields';
 import { Notebook } from '@/components/site/notebook';
-import { RuledLine } from '@/components/site/ruled-line';
-import { useT } from '@/hooks/use-t';
+import { useSite, useT } from '@/hooks/use-t';
+import { localDigits } from '@/lib/money';
 import { track } from '@/lib/track';
 import { cn } from '@/lib/utils';
 
@@ -68,10 +72,12 @@ function CopyRow({
     label,
     value,
     copyValue,
+    ltr = true,
 }: {
     label: string;
     value: string;
     copyValue?: string;
+    ltr?: boolean;
 }) {
     const t = useT();
     const [copied, setCopied] = useState(false);
@@ -87,23 +93,55 @@ function CopyRow({
     };
 
     return (
-        <div className="flex items-center justify-between gap-4 border-t border-paper/20 py-4">
-            <div>
-                <dt className="text-sm text-paper/60">{label}</dt>
-                <dd className="mt-0.5 text-xl break-all" dir="ltr">
+        <div className="flex items-center justify-between gap-4 border-t border-sand py-4">
+            <div className="min-w-0">
+                <dt className="text-caption text-ink-muted">{label}</dt>
+                <dd
+                    className="price mt-1 text-body-l break-all"
+                    dir={ltr ? 'ltr' : undefined}
+                >
                     {value}
                 </dd>
             </div>
             <button
                 type="button"
                 onClick={copy}
-                className="min-h-11 shrink-0 border border-paper/40 px-4 text-sm font-medium transition-colors duration-300 hover:border-paper"
+                className={cn(buttonClasses('secondary'), 'h-11 shrink-0 px-4')}
             >
+                {copied ? (
+                    <Check size={20} strokeWidth={1.5} aria-hidden="true" />
+                ) : (
+                    <Copy size={20} strokeWidth={1.5} aria-hidden="true" />
+                )}
                 <span aria-live="polite">
                     {copied ? t('order.copied') : t('order.copy')}
                 </span>
             </button>
         </div>
+    );
+}
+
+function Notice({
+    tone,
+    children,
+}: {
+    tone: 'success' | 'line' | 'ink';
+    children: string;
+}) {
+    return (
+        <p
+            role="status"
+            className={cn(
+                'rounded-lg border bg-paper-raised p-4 text-body-l md:p-6',
+                tone === 'success'
+                    ? 'border-success'
+                    : tone === 'line'
+                      ? 'border-line'
+                      : 'border-ink',
+            )}
+        >
+            {children}
+        </p>
     );
 }
 
@@ -115,10 +153,12 @@ export default function OrderPage({
     purchase,
 }: Props) {
     const t = useT();
+    const { locale } = useSite();
     const form = useForm<{ proof: File | null; reference: string }>({
         proof: null,
         reference: '',
     });
+    const [dragging, setDragging] = useState(false);
 
     useEffect(() => {
         if (!purchase) {
@@ -162,81 +202,91 @@ export default function OrderPage({
         }
     };
 
+    const drop = (event: DragEvent<HTMLLabelElement>) => {
+        event.preventDefault();
+        setDragging(false);
+
+        const file = event.dataTransfer.files?.[0];
+
+        if (file) {
+            form.setData('proof', file);
+        }
+    };
+
     const hasDetails = Boolean(
         instapay?.ipa || instapay?.phone || instapay?.qr,
     );
 
     return (
-        <div className="wrap pt-10 pb-24 md:pt-16">
+        <div className="wrap pt-12 pb-24">
             <header>
-                <h1 className="display text-display-lg">
+                <NibLoader size={72} once />
+                <h1 className="display mt-4 text-display-l">
                     {t('order.thanks', { name: order.customer_name })}
                 </h1>
-                <p className="mt-4 text-lede text-ink-soft">
-                    {t('order.received', { code: order.code })}
+                <p className="mt-8 overline">{t('order.code_label')}</p>
+                <p className="display mt-1 text-display-m" dir="ltr">
+                    {order.code}
                 </p>
-                <p className="mt-2 text-sm text-ink-soft">
+                <p className="mt-3 text-caption text-ink-muted">
                     {t('order.save_link')}
                 </p>
             </header>
 
-            <div className="mt-10 grid gap-x-8 gap-y-12 lg:grid-cols-12">
+            <div className="mt-12 grid gap-x-8 gap-y-12 lg:grid-cols-12">
                 <div className="flex flex-col gap-12 lg:col-span-7">
                     {/* Payment */}
-                    <section aria-labelledby="payment-title">
+                    <section
+                        aria-labelledby="payment-title"
+                        className="flex flex-col gap-6"
+                    >
                         <h2 id="payment-title" className="sr-only">
                             {t('order.payment_title')}
                         </h2>
 
                         {order.payment_status === 'paid' && (
-                            <p className="border-s-2 border-ok ps-4 text-lg">
-                                {t('order.paid')}
-                            </p>
+                            <Notice tone="success">{t('order.paid')}</Notice>
                         )}
 
                         {order.payment_status === 'refunded' && (
-                            <p className="border-s-2 border-ink ps-4 text-lg">
-                                {t('order.refunded')}
-                            </p>
+                            <Notice tone="ink">{t('order.refunded')}</Notice>
                         )}
 
                         {order.payment_method === 'cod' &&
                             order.payment_status === 'unpaid' &&
                             !order.closed && (
-                                <p className="border-s-2 border-line ps-4 text-lg">
+                                <Notice tone="ink">
                                     {t('order.cod_note', {
                                         amount: order.total_label,
                                     })}
-                                </p>
+                                </Notice>
                             )}
 
                         {instapay &&
                             order.payment_status ===
                                 'awaiting_verification' && (
-                                <p
-                                    role="status"
-                                    className="border-s-2 border-line ps-4 text-lg"
-                                >
+                                <Notice tone="line">
                                     {t('order.proof_received')}
-                                </p>
+                                </Notice>
                             )}
 
                         {instapay &&
                             order.payment_status === 'unpaid' &&
                             !order.closed && (
                                 <>
-                                    <div className="bg-ink p-6 text-paper sm:p-10">
-                                        <h3 className="display text-display-md">
+                                    {/* InstaPay instructions card */}
+                                    <div className="rounded-lg border border-sand bg-paper-raised p-4 md:p-6">
+                                        <h3 className="text-title">
                                             {t('order.pay_title', {
                                                 amount: order.total_label,
                                             })}
                                         </h3>
-                                        <p className="mt-3 max-w-lg text-paper/70">
+                                        <p className="mt-2 max-w-lg text-ink-muted">
                                             {t('order.pay_body')}
                                         </p>
 
                                         {hasDetails ? (
-                                            <div className="mt-8 grid gap-8 sm:grid-cols-[1fr_auto]">
+                                            <div className="mt-6 grid gap-6 sm:grid-cols-[1fr_auto]">
                                                 <dl>
                                                     <CopyRow
                                                         label={t(
@@ -248,6 +298,7 @@ export default function OrderPage({
                                                         copyValue={
                                                             order.amount_plain
                                                         }
+                                                        ltr={false}
                                                     />
                                                     {instapay.ipa && (
                                                         <CopyRow
@@ -274,12 +325,12 @@ export default function OrderPage({
                                                         alt={t('order.qr_alt')}
                                                         width={176}
                                                         height={176}
-                                                        className="size-44 bg-paper p-2"
+                                                        className="size-44 rounded-sm border border-sand bg-white p-2"
                                                     />
                                                 )}
                                             </div>
                                         ) : (
-                                            <p className="mt-8 border-t border-paper/20 pt-4">
+                                            <p className="mt-6 border-t border-sand pt-4">
                                                 {t('order.instapay_missing')}
                                             </p>
                                         )}
@@ -288,17 +339,17 @@ export default function OrderPage({
                                     {instapay.can_submit && (
                                         <form
                                             onSubmit={submit}
-                                            className="mt-8 flex flex-col gap-8"
+                                            className="flex flex-col gap-6"
                                             noValidate
                                         >
-                                            <h3 className="display text-display-sm">
+                                            <h3 className="text-title">
                                                 {t('order.proof_title')}
                                             </h3>
 
                                             {instapay.rejection && (
                                                 <p
                                                     role="alert"
-                                                    className="border-s-2 border-danger ps-4 text-danger"
+                                                    className="rounded-sm border border-danger bg-paper-raised p-4 text-danger"
                                                 >
                                                     {t('order.proof_rejected', {
                                                         reason: instapay.rejection,
@@ -306,40 +357,78 @@ export default function OrderPage({
                                                 </p>
                                             )}
 
+                                            {/* Upload dropzone */}
                                             <div>
                                                 <label
                                                     htmlFor="proof"
-                                                    className="text-sm font-medium"
+                                                    onDragOver={(event) => {
+                                                        event.preventDefault();
+                                                        setDragging(true);
+                                                    }}
+                                                    onDragLeave={() =>
+                                                        setDragging(false)
+                                                    }
+                                                    onDrop={drop}
+                                                    className={cn(
+                                                        'flex cursor-pointer flex-col items-center gap-3 rounded-lg border-[1.5px] border-dashed px-6 py-10 text-center transition-colors duration-300 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-line',
+                                                        dragging
+                                                            ? 'border-ink bg-paper-raised'
+                                                            : 'border-sand hover:border-ink-muted',
+                                                        form.errors.proof &&
+                                                            'border-danger',
+                                                    )}
                                                 >
-                                                    {t('order.proof_file')}
+                                                    <Upload
+                                                        size={24}
+                                                        strokeWidth={1.5}
+                                                        aria-hidden="true"
+                                                    />
+                                                    <span className="text-label">
+                                                        {t('order.proof_file')}
+                                                    </span>
+                                                    <span className="text-caption text-ink-muted">
+                                                        {form.data.proof
+                                                            ? t(
+                                                                  'order.proof_chosen',
+                                                                  {
+                                                                      name: form
+                                                                          .data
+                                                                          .proof
+                                                                          .name,
+                                                                  },
+                                                              )
+                                                            : t(
+                                                                  'order.proof_drop',
+                                                              )}
+                                                    </span>
+                                                    <input
+                                                        id="proof"
+                                                        type="file"
+                                                        accept="image/*"
+                                                        aria-describedby="proof-help"
+                                                        aria-invalid={
+                                                            form.errors.proof
+                                                                ? true
+                                                                : undefined
+                                                        }
+                                                        onChange={(event) =>
+                                                            form.setData(
+                                                                'proof',
+                                                                event.target
+                                                                    .files?.[0] ??
+                                                                    null,
+                                                            )
+                                                        }
+                                                        className="sr-only"
+                                                    />
                                                 </label>
-                                                <input
-                                                    id="proof"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    aria-describedby="proof-help"
-                                                    aria-invalid={
-                                                        form.errors.proof
-                                                            ? true
-                                                            : undefined
-                                                    }
-                                                    onChange={(event) =>
-                                                        form.setData(
-                                                            'proof',
-                                                            event.target
-                                                                .files?.[0] ??
-                                                                null,
-                                                        )
-                                                    }
-                                                    className="mt-3 block w-full text-[0.9375rem] file:me-4 file:min-h-11 file:cursor-pointer file:border file:border-solid file:border-ink/30 file:bg-transparent file:px-5 file:text-sm file:font-medium file:text-ink"
-                                                />
                                                 <p
                                                     id="proof-help"
                                                     className={cn(
-                                                        'mt-2 text-sm',
+                                                        'mt-2 text-caption',
                                                         form.errors.proof
                                                             ? 'text-danger'
-                                                            : 'text-ink-soft',
+                                                            : 'text-ink-muted',
                                                     )}
                                                 >
                                                     {form.errors.proof ??
@@ -375,10 +464,10 @@ export default function OrderPage({
                                                     }
                                                     aria-valuemin={0}
                                                     aria-valuemax={100}
-                                                    className="h-px w-full bg-stone"
+                                                    className="h-[3px] w-full bg-sand"
                                                 >
                                                     <div
-                                                        className="h-px bg-line transition-[width] duration-300"
+                                                        className="h-[3px] bg-line transition-[width] duration-300"
                                                         style={{
                                                             width: `${form.progress.percentage ?? 0}%`,
                                                         }}
@@ -387,10 +476,9 @@ export default function OrderPage({
                                             )}
 
                                             <div>
-                                                <button
+                                                <Button
                                                     type="submit"
                                                     disabled={form.processing}
-                                                    className="min-h-13 bg-line px-8 font-medium text-paper transition-colors duration-300 hover:bg-line-deep disabled:bg-stone disabled:text-ink-soft"
                                                 >
                                                     {form.processing
                                                         ? t(
@@ -399,7 +487,7 @@ export default function OrderPage({
                                                         : t(
                                                               'order.proof_submit',
                                                           )}
-                                                </button>
+                                                </Button>
                                             </div>
                                         </form>
                                     )}
@@ -409,16 +497,16 @@ export default function OrderPage({
 
                     {/* Status timeline */}
                     <section aria-labelledby="status-title">
-                        <RuledLine />
+                        <SignatureLine className="max-w-24" />
                         <h2
                             id="status-title"
-                            className="display mt-6 text-display-md"
+                            className="display mt-6 text-display-m"
                         >
                             {t('order.status_title')}
                         </h2>
 
                         {order.closed ? (
-                            <p className="mt-6 text-lg">
+                            <p className="mt-6 text-body-l">
                                 {order.status === 'cancelled'
                                     ? t('order.cancelled')
                                     : t('order.returned')}
@@ -434,43 +522,45 @@ export default function OrderPage({
                                             aria-current={
                                                 current ? 'step' : undefined
                                             }
-                                            className="relative flex gap-5 pb-7 last:pb-0"
+                                            className="relative flex gap-4 pb-6 last:pb-0"
                                         >
                                             {index < timeline.length - 1 && (
                                                 <span
                                                     aria-hidden="true"
                                                     className={cn(
-                                                        'absolute start-[5px] top-4 h-full w-px',
+                                                        'absolute start-[5px] top-4 h-full w-[1.5px]',
                                                         timeline[index + 1]
                                                             .reached
-                                                            ? 'bg-line'
-                                                            : 'bg-stone',
+                                                            ? 'bg-ink'
+                                                            : 'bg-sand',
                                                     )}
                                                 />
                                             )}
                                             <span
                                                 aria-hidden="true"
                                                 className={cn(
-                                                    'relative mt-2 size-[11px] shrink-0 rounded-full border',
-                                                    step.reached
+                                                    'relative mt-2 size-3 shrink-0 rounded-full border-[1.5px]',
+                                                    current
                                                         ? 'border-line bg-line'
-                                                        : 'border-ink/30 bg-paper',
+                                                        : step.reached
+                                                          ? 'border-ink bg-ink'
+                                                          : 'border-sand bg-paper',
                                                 )}
                                             />
                                             <span>
                                                 <span
                                                     className={cn(
-                                                        'block text-lg',
+                                                        'block text-body-l',
                                                         !step.reached &&
-                                                            'text-ink-soft',
+                                                            'text-ink-muted',
                                                         current &&
-                                                            'font-medium',
+                                                            'font-semibold',
                                                     )}
                                                 >
                                                     {step.label}
                                                 </span>
                                                 {step.date && (
-                                                    <span className="text-sm text-ink-soft">
+                                                    <span className="text-caption text-ink-muted">
                                                         {step.date}
                                                     </span>
                                                 )}
@@ -482,7 +572,7 @@ export default function OrderPage({
                         )}
 
                         {order.tracking_number && (
-                            <p className="mt-6 text-ink-soft">
+                            <p className="mt-6 text-ink-muted">
                                 {t('order.tracking')}:{' '}
                                 <span dir="ltr">{order.tracking_number}</span>
                             </p>
@@ -495,7 +585,7 @@ export default function OrderPage({
                                 href={whatsapp}
                                 target="_blank"
                                 rel="noopener"
-                                className="inline-flex min-h-13 items-center border border-ink/25 px-8 font-medium transition-colors duration-300 hover:border-ink"
+                                className={buttonClasses('secondary')}
                             >
                                 {t('order.whatsapp')}
                             </a>
@@ -503,87 +593,98 @@ export default function OrderPage({
                     )}
                 </div>
 
-                {/* Summary */}
+                {/* Summary card */}
                 <aside
                     aria-labelledby="summary-title"
                     className="lg:col-span-4 lg:col-start-9"
                 >
-                    <h2 id="summary-title" className="display text-display-md">
-                        {t('order.summary_title')}
-                    </h2>
-                    {order.item && (
-                        <>
-                            {order.item.design_key && order.item.tint && (
-                                <div className="mt-6 bg-paper-deep px-[22%] py-[10%]">
-                                    <Notebook
-                                        designKey={order.item.design_key}
-                                        tint={order.item.tint}
-                                    />
-                                </div>
-                            )}
-                            <dl className="mt-6 text-[0.9375rem]">
-                                <div className="flex justify-between gap-6 border-t border-stone py-3">
-                                    <dt className="text-ink-soft">
-                                        {order.item.product}
-                                    </dt>
-                                    <dd>{order.item.design}</dd>
-                                </div>
-                                <div className="flex justify-between gap-6 border-t border-stone py-3">
-                                    <dt className="text-ink-soft">
-                                        {t('order.quantity')}
-                                    </dt>
-                                    <dd className="tabular-nums">
-                                        {order.item.quantity}
-                                    </dd>
-                                </div>
-                                {order.item.gift_message && (
-                                    <div className="border-t border-stone py-3">
-                                        <dt className="text-ink-soft">
-                                            {t('order.gift_message')}
+                    <div className="rounded-lg border border-sand bg-paper-raised p-4 md:p-6">
+                        <h2 id="summary-title" className="text-title">
+                            {t('order.summary_title')}
+                        </h2>
+                        {order.item && (
+                            <>
+                                {order.item.design_key && order.item.tint && (
+                                    <div className="mt-4 rounded-lg bg-sand-deep px-[26%] py-[10%]">
+                                        <Notebook
+                                            designKey={order.item.design_key}
+                                            tint={order.item.tint}
+                                        />
+                                    </div>
+                                )}
+                                <dl className="mt-4">
+                                    <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                        <dt className="text-ink-muted">
+                                            {order.item.product}
                                         </dt>
-                                        <dd className="mt-1 whitespace-pre-line">
-                                            {order.item.gift_message}
+                                        <dd className="font-semibold">
+                                            {order.item.design}
                                         </dd>
                                     </div>
-                                )}
-                                <div className="flex justify-between gap-6 border-t border-stone py-3">
-                                    <dt className="text-ink-soft">
-                                        {t('order.subtotal')}
-                                    </dt>
-                                    <dd className="tabular-nums">
-                                        {order.subtotal_label}
-                                    </dd>
-                                </div>
-                                {order.discount > 0 && (
-                                    <div className="flex justify-between gap-6 border-t border-stone py-3 text-line">
-                                        <dt>{t('order.discount')}</dt>
-                                        <dd className="tabular-nums">
-                                            −{order.discount_label}
+                                    <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                        <dt className="text-ink-muted">
+                                            {t('order.quantity')}
+                                        </dt>
+                                        <dd className="price">
+                                            {localDigits(
+                                                order.item.quantity,
+                                                locale,
+                                            )}
                                         </dd>
                                     </div>
-                                )}
-                                <div className="flex items-baseline justify-between gap-6 border-y border-ink py-4">
-                                    <dt className="font-medium">
-                                        {t('order.total')}
-                                    </dt>
-                                    <dd className="text-2xl tabular-nums">
-                                        {order.total_label}
-                                    </dd>
-                                </div>
-                                <div className="flex justify-between gap-6 py-3">
-                                    <dt className="text-ink-soft">
-                                        {order.payment_method_label}
-                                    </dt>
-                                    <dd>{order.payment_status_label}</dd>
-                                </div>
-                            </dl>
-                        </>
-                    )}
+                                    {order.item.gift_message && (
+                                        <div className="border-t border-sand py-3">
+                                            <dt className="text-ink-muted">
+                                                {t('order.gift_message')}
+                                            </dt>
+                                            <dd className="mt-1 whitespace-pre-line">
+                                                {order.item.gift_message}
+                                            </dd>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                        <dt className="text-ink-muted">
+                                            {t('order.subtotal')}
+                                        </dt>
+                                        <dd className="price">
+                                            {order.subtotal_label}
+                                        </dd>
+                                    </div>
+                                    {order.discount > 0 && (
+                                        <div className="flex justify-between gap-6 border-t border-sand py-3">
+                                            <dt className="text-ink-muted">
+                                                {t('order.discount')}
+                                            </dt>
+                                            <dd className="price">
+                                                −{order.discount_label}
+                                            </dd>
+                                        </div>
+                                    )}
+                                    <div className="flex items-baseline justify-between gap-6 border-t-[1.5px] border-ink py-4">
+                                        <dt className="text-label">
+                                            {t('order.total')}
+                                        </dt>
+                                        <dd className="price text-title">
+                                            {order.total_label}
+                                        </dd>
+                                    </div>
+                                    <div className="flex justify-between gap-6 border-t border-sand pt-3">
+                                        <dt className="text-ink-muted">
+                                            {order.payment_method_label}
+                                        </dt>
+                                        <dd className="font-semibold">
+                                            {order.payment_status_label}
+                                        </dd>
+                                    </div>
+                                </dl>
+                            </>
+                        )}
+                    </div>
 
-                    <h2 className="mt-8 text-sm font-medium">
+                    <h2 className="mt-8 overline">
                         {t('order.delivery_title')}
                     </h2>
-                    <p className="mt-2 text-ink-soft">
+                    <p className="mt-2 text-ink-muted">
                         {order.address}
                         <br />
                         <span dir="ltr">{order.phone}</span>
