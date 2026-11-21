@@ -46,3 +46,7 @@ A restyle only: no changes to controllers, data or business logic. The one new r
 - **Home faculty editions** are link cards to each faculty page rather than radio inputs, so those pages keep their internal links. Radio cards are used where a choice is made (message section, product, checkout).
 - **Fraunces** is the static 400 weight; the self-hosted package has no optical-size axis.
 - **Not done:** browser, screenshot and Lighthouse checks were skipped at the owner's request.
+
+## Delivery promise
+
+- Delivery is now stated as "at your doorstep within 3 days of ordering" everywhere: the price line on the home, product and faculty pages, the payment band, the delivery FAQ, the Delivery & Returns page, the graduation article, and the Product structured data (handling 0–1 day, transit 1–2 days).

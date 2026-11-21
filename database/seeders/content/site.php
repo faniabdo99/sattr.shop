@@ -37,7 +37,7 @@ return [
         ],
         [
             'question' => ['ar' => 'كم يستغرق التوصيل؟', 'en' => 'How long does delivery take?'],
-            'answer' => ['ar' => 'نجهّز الطقم خلال يومين إلى ثلاثة أيام عمل، ثم يصلك مع بوسطة خلال يومين إلى خمسة أيام حسب المحافظة. الشحن مجاني لكل محافظات مصر.', 'en' => 'We prepare the pack in two to three working days, then Bosta delivers within two to five days depending on the governorate. Delivery is free across Egypt.'],
+            'answer' => ['ar' => 'يصلك الطلب حتى باب البيت خلال 3 أيام من تاريخ الطلب مع بوسطة. الشحن مجاني لكل محافظات مصر.', 'en' => 'Your order is at your doorstep within 3 days of ordering, delivered by Bosta. Delivery is free across Egypt.'],
         ],
         [
             'question' => ['ar' => 'كيف أدفع بإنستاباي وأحصل على الخصم؟', 'en' => 'How do I pay by InstaPay and get the discount?'],
@@ -68,8 +68,8 @@ return [
             'title' => ['ar' => 'التوصيل والاسترجاع', 'en' => 'Delivery & Returns'],
             'excerpt' => ['ar' => 'شحن مجاني لكل محافظات مصر مع بوسطة.', 'en' => 'Free delivery to every governorate in Egypt with Bosta.'],
             'body' => [
-                'ar' => '<h2>التوصيل</h2><p>الشحن مجاني لكل محافظات مصر مع بوسطة. نجهّز الطقم خلال يومين إلى ثلاثة أيام عمل، ويصل خلال يومين إلى خمسة أيام بعد الشحن حسب المحافظة. يتواصل معك المندوب قبل التسليم.</p><h2>الاسترجاع والاستبدال</h2><p>يمكن استرجاع الطقم خلال 14 يوماً من الاستلام بحالته الأصلية. إذا وصل بعيب صناعة أو تلف في الشحن نستبدله على حسابنا.</p><h2>استرداد المبلغ</h2><p>يُرد المبلغ بنفس طريقة الدفع خلال سبعة أيام عمل من استلامنا للطقم المرتجع.</p>',
-                'en' => '<h2>Delivery</h2><p>Delivery is free to every governorate in Egypt with Bosta. We prepare each pack in two to three working days, and it arrives two to five days after dispatch depending on the governorate. The courier calls before delivery.</p><h2>Returns and exchanges</h2><p>A pack can be returned within 14 days of delivery in its original condition. If it arrives with a manufacturing fault or shipping damage, we replace it at our cost.</p><h2>Refunds</h2><p>Refunds are made by the original payment method within seven working days of our receiving the returned pack.</p>',
+                'ar' => '<h2>التوصيل</h2><p>الشحن مجاني لكل محافظات مصر مع بوسطة. يصلك الطلب حتى باب البيت خلال 3 أيام من تاريخ الطلب. يتواصل معك المندوب قبل التسليم.</p><h2>الاسترجاع والاستبدال</h2><p>يمكن استرجاع الطقم خلال 14 يوماً من الاستلام بحالته الأصلية. إذا وصل بعيب صناعة أو تلف في الشحن نستبدله على حسابنا.</p><h2>استرداد المبلغ</h2><p>يُرد المبلغ بنفس طريقة الدفع خلال سبعة أيام عمل من استلامنا للطقم المرتجع.</p>',
+                'en' => '<h2>Delivery</h2><p>Delivery is free to every governorate in Egypt with Bosta. Your order is at your doorstep within 3 days of ordering. The courier calls before delivery.</p><h2>Returns and exchanges</h2><p>A pack can be returned within 14 days of delivery in its original condition. If it arrives with a manufacturing fault or shipping damage, we replace it at our cost.</p><h2>Refunds</h2><p>Refunds are made by the original payment method within seven working days of our receiving the returned pack.</p>',
             ],
         ],
         'privacy' => [
@@ -123,8 +123,8 @@ return [
             'title' => ['ar' => 'أفضل هدايا التخرج في مصر', 'en' => 'The best graduation gifts in Egypt'],
             'excerpt' => ['ar' => 'هدية التخرج تُحفظ سنوات. كيف تختار ما يستحق البقاء.', 'en' => 'A graduation gift is kept for years. How to choose one worth keeping.'],
             'body' => [
-                'ar' => '<p>التخرج لحظة لا تتكرر، وهديته تُحفظ. القاعدة البسيطة: اختر شيئاً يُستخدم في الحياة التي تبدأ بعده، لا شيئاً يذكّر فقط بما انتهى.</p><h2>هدايا للمكتب الأول</h2><p>أول وظيفة تعني أول مكتب. نوت بوك وقلم ومج بتصميم الكلية تجعل المكتب الجديد مألوفاً.</p><h2>أضف رسالة</h2><p>بطاقة بخط واضح وجملة صادقة تبقى أطول من الهدية نفسها.</p><h2>اطلب مبكراً</h2><p>الهدايا المجهّزة عند الطلب تحتاج أياماً للتجهيز والتوصيل. اطلب قبل الحفل بأسبوع على الأقل.</p>',
-                'en' => '<p>Graduation happens once, and its gift is kept. The simple rule: choose something used in the life that starts afterwards, not something that only recalls what has ended.</p><h2>Gifts for the first desk</h2><p>A first job means a first desk. A notebook, pen and mug in the faculty’s design make a new desk feel familiar.</p><h2>Add a message</h2><p>A card with a clear hand and an honest sentence lasts longer than the gift itself.</p><h2>Order early</h2><p>Gifts prepared to order need days to pack and deliver. Order at least a week before the ceremony.</p>',
+                'ar' => '<p>التخرج لحظة لا تتكرر، وهديته تُحفظ. القاعدة البسيطة: اختر شيئاً يُستخدم في الحياة التي تبدأ بعده، لا شيئاً يذكّر فقط بما انتهى.</p><h2>هدايا للمكتب الأول</h2><p>أول وظيفة تعني أول مكتب. نوت بوك وقلم ومج بتصميم الكلية تجعل المكتب الجديد مألوفاً.</p><h2>أضف رسالة</h2><p>بطاقة بخط واضح وجملة صادقة تبقى أطول من الهدية نفسها.</p><h2>اطلب مبكراً</h2><p>الطلب يصل خلال 3 أيام من تاريخ الطلب. اطلب قبل الحفل بأيام قليلة لتكون مطمئناً.</p>',
+                'en' => '<p>Graduation happens once, and its gift is kept. The simple rule: choose something used in the life that starts afterwards, not something that only recalls what has ended.</p><h2>Gifts for the first desk</h2><p>A first job means a first desk. A notebook, pen and mug in the faculty’s design make a new desk feel familiar.</p><h2>Add a message</h2><p>A card with a clear hand and an honest sentence lasts longer than the gift itself.</p><h2>Order early</h2><p>Orders arrive within 3 days of ordering. Order a few days before the ceremony to be safe.</p>',
             ],
         ],
         [
