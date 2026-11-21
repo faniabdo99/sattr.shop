@@ -46,7 +46,8 @@ class ReviewController extends Controller
             PostHog::capture('review_submitted', [
                 'rating' => $review->rating,
                 'locale' => $review->locale,
-            ]);
+                'transaction_id' => $order->code,
+            ], $order->analyticsId());
         }
 
         return redirect()->to($request->fullUrl());

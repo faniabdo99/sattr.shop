@@ -70,6 +70,10 @@ class CheckoutController extends Controller
                 'fbp' => $request->cookie('_fbp'),
                 'fbc' => $request->cookie('_fbc'),
                 'ttp' => $request->cookie('_ttp'),
+                // Sent by the browser (see posthogHeaders in lib/track.ts) so the
+                // server-side order events join the visitor's PostHog session.
+                'posthog_id' => $this->posthogHeader($request, 'X-PostHog-Distinct-Id'),
+                'posthog_session_id' => $this->posthogHeader($request, 'X-PostHog-Session-Id'),
             ]),
         ]);
 
@@ -106,6 +110,13 @@ class CheckoutController extends Controller
             ->filter(fn ($value) => is_string($value) && $value !== '')
             ->map(fn (string $value) => Str::limit(strip_tags($value), 250, ''))
             ->all();
+    }
+
+    private function posthogHeader(Request $request, string $name): ?string
+    {
+        $value = $request->header($name);
+
+        return is_string($value) && preg_match('/^[\w.:-]{1,200}$/', $value) ? $value : null;
     }
 
     private function gaClientId(mixed $cookie): ?string

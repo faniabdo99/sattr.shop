@@ -5,6 +5,7 @@ import { DesignPicker } from '@/components/site/design-picker';
 import { TextAreaField } from '@/components/site/fields';
 import { useSite, useT } from '@/hooks/use-t';
 import { localDigits } from '@/lib/money';
+import { track } from '@/lib/track';
 import type { Design, Product } from '@/types/site';
 
 export function checkoutUrl(
@@ -127,6 +128,13 @@ export function OrderPanel({
                             design?.key,
                             message,
                         )}
+                        onClick={() =>
+                            track('order_cta_clicked', {
+                                cta_location: 'order_panel',
+                                design: design?.key,
+                                has_gift_message: message.trim() !== '',
+                            })
+                        }
                     >
                         {lockDesign
                             ? t('cta.order_design')

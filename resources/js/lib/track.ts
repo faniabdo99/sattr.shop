@@ -16,7 +16,28 @@ export type TrackEvent =
     | 'select_design'
     | 'begin_checkout'
     | 'add_payment_info'
-    | 'purchase';
+    | 'purchase'
+    | PostHogEvent;
+
+/** Funnel detail that only PostHog receives; ad pixels never see these. */
+export type PostHogEvent =
+    | 'order_cta_clicked'
+    | 'checkout_quantity_changed'
+    | 'add_shipping_info'
+    | 'checkout_submitted'
+    | 'checkout_failed'
+    | 'payment_details_copied'
+    | 'support_contact_clicked';
+
+const POSTHOG_ONLY: ReadonlySet<TrackEvent> = new Set<PostHogEvent>([
+    'order_cta_clicked',
+    'checkout_quantity_changed',
+    'add_shipping_info',
+    'checkout_submitted',
+    'checkout_failed',
+    'payment_details_copied',
+    'support_contact_clicked',
+]);
 
 export type TrackItem = {
     item_id: string;
@@ -36,6 +57,16 @@ export type TrackPayload = {
     design?: string;
     page_location?: string;
     page_title?: string;
+    /** Which button sent the visitor to checkout: hero, sticky_bar, order_panel… */
+    cta_location?: string;
+    quantity?: number;
+    has_gift_message?: boolean;
+    governorate?: string;
+    /** Names of the fields the server rejected. Never their values. */
+    error_fields?: string[];
+    /** Which InstaPay detail was copied: ipa, phone, amount… */
+    field?: string;
+    channel?: 'whatsapp';
 };
 
 export type Consent = 'granted' | 'denied' | null;
@@ -292,7 +323,7 @@ function flush(): void {
     pending.forEach(({ event, payload }) => dispatch(event, payload));
 }
 
-const META_EVENTS: Record<TrackEvent, string> = {
+const META_EVENTS: Record<Exclude<TrackEvent, PostHogEvent>, string> = {
     page_view: 'PageView',
     view_item: 'ViewContent',
     select_design: 'CustomizeProduct',
@@ -310,6 +341,12 @@ const TIKTOK_EVENTS: Partial<Record<TrackEvent, string>> = {
 };
 
 function dispatch(event: TrackEvent, payload: TrackPayload): void {
+    if (POSTHOG_ONLY.has(event)) {
+        posthog?.capture(event, payload);
+
+        return;
+    }
+
     const contents = (payload.items ?? []).map((item) => ({
         id: item.item_id,
         quantity: item.quantity,
@@ -339,7 +376,7 @@ function dispatch(event: TrackEvent, payload: TrackPayload): void {
     if (config.metaPixel && window.fbq) {
         window.fbq(
             'track',
-            META_EVENTS[event],
+            META_EVENTS[event as keyof typeof META_EVENTS],
             event === 'page_view'
                 ? {}
                 : {
@@ -374,9 +411,26 @@ function dispatch(event: TrackEvent, payload: TrackPayload): void {
         }
     }
 
-    if (posthog) {
+    // PostHog gets "purchase" from the server (Tracker.php), which knows the
+    // real order total. Sending it here too would count every order twice.
+    if (posthog && event !== 'purchase') {
         posthog.capture(event === 'page_view' ? '$pageview' : event, payload);
     }
+}
+
+/**
+ * Headers that tell the server which PostHog visitor and session a request
+ * belongs to. Empty until PostHog has loaded (no key, or no consent).
+ */
+export function posthogHeaders(): Record<string, string> {
+    if (!posthog) {
+        return {};
+    }
+
+    return {
+        'X-PostHog-Distinct-Id': posthog.get_distinct_id(),
+        'X-PostHog-Session-Id': posthog.get_session_id(),
+    };
 }
 
 export function track(event: TrackEvent, payload: TrackPayload = {}): void {

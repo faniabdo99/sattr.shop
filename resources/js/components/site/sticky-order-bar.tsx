@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { buttonClasses } from '@/components/brand/Button';
 import { useT } from '@/hooks/use-t';
+import { track } from '@/lib/track';
 import type { Product } from '@/types/site';
 
 /** Phone order bar: ink ground, price at the start, blue CTA at the end. */
@@ -34,7 +35,15 @@ export function StickyOrderBar({
                         {t('product.sold_out')}
                     </span>
                 ) : (
-                    <Link href={href} className={buttonClasses('primary')}>
+                    <Link
+                        href={href}
+                        className={buttonClasses('primary')}
+                        onClick={() =>
+                            track('order_cta_clicked', {
+                                cta_location: 'sticky_bar',
+                            })
+                        }
+                    >
                         {t('cta.order')}
                     </Link>
                 )}

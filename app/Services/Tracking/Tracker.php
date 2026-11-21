@@ -29,9 +29,15 @@ class Tracker
             ->all();
     }
 
-    public function track(string $event, Order $order): void
+    /**
+     * @param  list<class-string<TrackingDriver>>|null  $only  limit the event to these drivers
+     */
+    public function track(string $event, Order $order, ?array $only = null): void
     {
-        $drivers = $this->enabledDrivers();
+        $drivers = array_filter(
+            $this->enabledDrivers(),
+            fn (TrackingDriver $driver) => $only === null || in_array($driver::class, $only, true),
+        );
 
         if ($drivers === []) {
             return;
@@ -84,7 +90,25 @@ class Tracker
                 'fbc' => $context['fbc'] ?? null,
                 'ttp' => $context['ttp'] ?? null,
                 'ttclid' => $order->ttclid,
-                'distinct_id' => $context['posthog_id'] ?? $order->code,
+                'distinct_id' => $order->analyticsId(),
+                'session_id' => $context['posthog_session_id'] ?? null,
+                // False when the visitor never loaded PostHog (no consent): the
+                // event is then sent without creating a person profile.
+                'known_visitor' => isset($context['posthog_id']),
+            ],
+            'order' => [
+                'status' => $order->status->value,
+                'payment_status' => $order->payment_status->value,
+                'quantity' => (int) $order->items->sum('quantity'),
+                'design' => $order->items->first()?->design?->key,
+                'subtotal' => Money::pounds($order->subtotal),
+                'discount' => Money::pounds($order->discount_amount),
+                'has_gift_message' => $order->items->contains(fn ($item) => filled($item->gift_message)),
+                'governorate' => $order->governorate,
+                'locale' => $order->locale,
+                'utm_source' => $order->utm_source,
+                'utm_medium' => $order->utm_medium,
+                'utm_campaign' => $order->utm_campaign,
             ],
         ];
     }

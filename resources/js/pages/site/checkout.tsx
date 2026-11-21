@@ -15,7 +15,7 @@ import { useInstapayBadge } from '@/components/site/order-panel';
 import { RadioCard } from '@/components/site/radio-card';
 import { useSite, useT } from '@/hooks/use-t';
 import { formatMoney, localDigits } from '@/lib/money';
-import { track } from '@/lib/track';
+import { posthogHeaders, track } from '@/lib/track';
 import type { Design, Product } from '@/types/site';
 
 type PaymentOption = {
@@ -50,14 +50,17 @@ declare global {
 function Step({
     id,
     title,
+    onBlur,
     children,
 }: {
     id: string;
     title: string;
+    /** Runs when focus leaves any field in the section. */
+    onBlur?: () => void;
     children: ReactNode;
 }) {
     return (
-        <section aria-labelledby={id} className="pt-12">
+        <section aria-labelledby={id} className="pt-12" onBlur={onBlur}>
             <SignatureLine className="max-w-24" />
             <h2 id={id} className="display mt-6 text-display-m">
                 {title}
@@ -182,12 +185,54 @@ export default function Checkout({
         });
     };
 
+    const changeQuantity = (next: number) => {
+        setData('quantity', next);
+        track('checkout_quantity_changed', {
+            quantity: next,
+            design: data.design,
+        });
+    };
+
+    // Fires once, when the last required delivery field has been filled in.
+    const deliveryTracked = useRef(false);
+    const trackDelivery = () => {
+        const complete = [
+            data.customer_name,
+            data.phone,
+            data.governorate,
+            data.city,
+            data.address,
+        ].every((value) => value.trim() !== '');
+
+        if (complete && !deliveryTracked.current) {
+            deliveryTracked.current = true;
+            track('add_shipping_info', {
+                value: total / 100,
+                governorate: data.governorate,
+                items,
+            });
+        }
+    };
+
     const submit = (event: FormEvent) => {
         event.preventDefault();
+        track('checkout_submitted', {
+            value: total / 100,
+            payment_type: data.payment_method,
+            design: data.design,
+            quantity,
+            has_gift_message: data.gift_message.trim() !== '',
+            items,
+        });
         form.transform((values) => ({ ...values, quantity }));
         form.post(store_url, {
             preserveScroll: true,
-            onError: () => {
+            headers: posthogHeaders(),
+            onError: (failed) => {
+                track('checkout_failed', {
+                    payment_type: data.payment_method,
+                    error_fields: Object.keys(failed),
+                });
                 window.turnstile?.reset();
                 document
                     .getElementById('checkout-errors')
@@ -269,10 +314,7 @@ export default function Checkout({
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setData(
-                                        'quantity',
-                                        Math.max(1, quantity - 1),
-                                    )
+                                    changeQuantity(Math.max(1, quantity - 1))
                                 }
                                 disabled={quantity <= 1}
                                 aria-label="−"
@@ -293,8 +335,7 @@ export default function Checkout({
                             <button
                                 type="button"
                                 onClick={() =>
-                                    setData(
-                                        'quantity',
+                                    changeQuantity(
                                         Math.min(maxForDesign, quantity + 1),
                                     )
                                 }
@@ -341,7 +382,11 @@ export default function Checkout({
                     />
                 </Step>
 
-                <Step id="step-delivery" title={t('checkout.section_delivery')}>
+                <Step
+                    id="step-delivery"
+                    title={t('checkout.section_delivery')}
+                    onBlur={trackDelivery}
+                >
                     <TextField
                         label={t('checkout.full_name')}
                         name="name"

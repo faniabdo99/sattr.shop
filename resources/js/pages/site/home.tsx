@@ -105,7 +105,14 @@ export default function Home({
                             {product.sold_out ? (
                                 <Cta disabled>{t('product.sold_out_all')}</Cta>
                             ) : (
-                                <Cta href={product.checkout_url}>
+                                <Cta
+                                    href={product.checkout_url}
+                                    onClick={() =>
+                                        track('order_cta_clicked', {
+                                            cta_location: 'hero',
+                                        })
+                                    }
+                                >
                                     {t('cta.order')}
                                 </Cta>
                             )}
@@ -339,6 +346,14 @@ export default function Home({
                                             message,
                                         )}
                                         disabled={design.sold_out}
+                                        onClick={() =>
+                                            track('order_cta_clicked', {
+                                                cta_location: 'personalizer',
+                                                design: design.key,
+                                                has_gift_message:
+                                                    message.trim() !== '',
+                                            })
+                                        }
                                     >
                                         {design.sold_out
                                             ? t('product.sold_out')
@@ -491,7 +506,16 @@ export default function Home({
                     {product.sold_out ? (
                         <Cta disabled>{t('product.sold_out_all')}</Cta>
                     ) : (
-                        <Cta href={product.checkout_url}>{t('cta.order')}</Cta>
+                        <Cta
+                            href={product.checkout_url}
+                            onClick={() =>
+                                track('order_cta_clicked', {
+                                    cta_location: 'final',
+                                })
+                            }
+                        >
+                            {t('cta.order')}
+                        </Cta>
                     )}
                 </div>
             </section>

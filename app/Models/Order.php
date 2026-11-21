@@ -36,6 +36,15 @@ class Order extends Model
         ];
     }
 
+    /**
+     * Who this order belongs to in PostHog: the visitor's browser ID when it
+     * was captured at checkout, otherwise the order code.
+     */
+    public function analyticsId(): string
+    {
+        return $this->tracking_context['posthog_id'] ?? $this->code;
+    }
+
     /** @return HasMany<OrderItem, $this> */
     public function items(): HasMany
     {

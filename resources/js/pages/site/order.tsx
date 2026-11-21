@@ -69,11 +69,14 @@ type Props = {
 };
 
 function CopyRow({
+    field,
     label,
     value,
     copyValue,
     ltr = true,
 }: {
+    /** Reported with the "payment_details_copied" event. */
+    field: 'amount' | 'ipa' | 'phone';
     label: string;
     value: string;
     copyValue?: string;
@@ -86,6 +89,7 @@ function CopyRow({
         try {
             await navigator.clipboard.writeText(copyValue ?? value);
             setCopied(true);
+            track('payment_details_copied', { field });
             window.setTimeout(() => setCopied(false), 2000);
         } catch {
             setCopied(false);
@@ -289,6 +293,7 @@ export default function OrderPage({
                                             <div className="mt-6 grid gap-6 sm:grid-cols-[1fr_auto]">
                                                 <dl>
                                                     <CopyRow
+                                                        field="amount"
                                                         label={t(
                                                             'order.amount',
                                                         )}
@@ -302,6 +307,7 @@ export default function OrderPage({
                                                     />
                                                     {instapay.ipa && (
                                                         <CopyRow
+                                                            field="ipa"
                                                             label={t(
                                                                 'order.ipa',
                                                             )}
@@ -310,6 +316,7 @@ export default function OrderPage({
                                                     )}
                                                     {instapay.phone && (
                                                         <CopyRow
+                                                            field="phone"
                                                             label={t(
                                                                 'order.phone',
                                                             )}
@@ -585,6 +592,12 @@ export default function OrderPage({
                                 href={whatsapp}
                                 target="_blank"
                                 rel="noopener"
+                                onClick={() =>
+                                    track('support_contact_clicked', {
+                                        channel: 'whatsapp',
+                                        transaction_id: order.code,
+                                    })
+                                }
                                 className={buttonClasses('secondary')}
                             >
                                 {t('order.whatsapp')}

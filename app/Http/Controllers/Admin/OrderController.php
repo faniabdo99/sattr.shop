@@ -208,12 +208,6 @@ class OrderController extends Controller
 
         $reject->handle($order, $request->user(), $request->validated('reason'));
 
-        PostHog::capture('payment_rejected', [
-            'payment_method' => $order->payment_method->value,
-            'value' => Money::pounds($order->total),
-            'currency' => 'EGP',
-        ]);
-
         return back()->with('success', 'Payment rejected and the customer notified.');
     }
 
