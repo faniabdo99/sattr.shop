@@ -80,6 +80,7 @@ export type Seo = {
 
 export type TrackingConfig = {
     ga4?: string;
+    gtm?: string;
     metaPixel?: string;
     posthogKey?: string;
     posthogHost?: string;

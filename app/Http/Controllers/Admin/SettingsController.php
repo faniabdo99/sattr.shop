@@ -26,6 +26,7 @@ class SettingsController extends Controller
         'social_tiktok' => 'social.tiktok',
         'tracking_ga4_id' => 'tracking.ga4_id',
         'tracking_ga4_api_secret' => 'tracking.ga4_api_secret',
+        'tracking_gtm_id' => 'tracking.gtm_id',
         'tracking_meta_pixel_id' => 'tracking.meta_pixel_id',
         'tracking_meta_capi_token' => 'tracking.meta_capi_token',
         'tracking_posthog_key' => 'tracking.posthog_key',

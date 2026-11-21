@@ -87,6 +87,7 @@ it('saves settings and keeps secrets out of the browser', function () {
         'instapay_ipa' => 'sattr@instapay',
         'instapay_phone' => '01012345678',
         'tracking_meta_pixel_id' => '123456',
+        'tracking_gtm_id' => 'GTM-KKF6PGHR',
         'tracking_meta_capi_token' => 'secret-token',
     ])->assertRedirect();
 
@@ -101,6 +102,7 @@ it('saves settings and keeps secrets out of the browser', function () {
 
     $this->get('/en')->assertInertia(fn ($page) => $page
         ->where('site.tracking.metaPixel', '123456')
+        ->where('site.tracking.gtm', 'GTM-KKF6PGHR')
         ->missing('site.tracking.metaCapiToken'))
         ->assertDontSee('secret-token');
 });

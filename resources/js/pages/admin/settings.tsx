@@ -25,6 +25,7 @@ const textFields = [
     'social_tiktok',
     'tracking_ga4_id',
     'tracking_ga4_api_secret',
+    'tracking_gtm_id',
     'tracking_meta_pixel_id',
     'tracking_meta_capi_token',
     'tracking_posthog_key',
@@ -310,6 +311,12 @@ export default function Settings({
                             name: 'tracking_ga4_api_secret',
                             label: 'GA4 API secret',
                             hint: 'For server-side purchase events.',
+                            mono: true,
+                        })}
+                        {text({
+                            name: 'tracking_gtm_id',
+                            label: 'Google Tag Manager container ID',
+                            placeholder: 'GTM-XXXXXXXX',
                             mono: true,
                         })}
                         {text({

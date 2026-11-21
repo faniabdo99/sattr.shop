@@ -20,6 +20,7 @@ class SettingsRequest extends AdminRequest
             'social_tiktok' => ['nullable', 'url', 'max:255'],
             'tracking_ga4_id' => ['nullable', 'string', 'max:40'],
             'tracking_ga4_api_secret' => ['nullable', 'string', 'max:120'],
+            'tracking_gtm_id' => ['nullable', 'string', 'regex:/^GTM-[A-Z0-9]+$/', 'max:40'],
             'tracking_meta_pixel_id' => ['nullable', 'string', 'max:40'],
             'tracking_meta_capi_token' => ['nullable', 'string', 'max:500'],
             'tracking_posthog_key' => ['nullable', 'string', 'max:120'],

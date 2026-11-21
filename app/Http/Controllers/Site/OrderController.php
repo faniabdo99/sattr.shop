@@ -17,6 +17,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use PostHog\Laravel\Facades\PostHog;
 
 class OrderController extends Controller
 {
@@ -103,6 +104,13 @@ class OrderController extends Controller
         );
 
         $submit->handle($order, $request->file('proof'), $request->validated('reference'));
+
+        PostHog::capture('payment_proof_submitted', [
+            'payment_method' => $order->payment_method->value,
+            'has_proof_file' => $request->hasFile('proof'),
+            'value' => Money::pounds($order->total),
+            'currency' => 'EGP',
+        ]);
 
         return redirect()->to($order->statusUrl());
     }

@@ -17,6 +17,7 @@
         "laravel/horizon": "^5.52",
         "laravel/tinker": "^3.0",
         "laravel/wayfinder": "^0.1.14",
+        "posthog/posthog-laravel": "^0.4.4",
         "spatie/laravel-medialibrary": "^11.23",
         "spatie/laravel-responsecache": "^8.7",
         "spatie/laravel-sitemap": "^8.2",

@@ -49,4 +49,27 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'is_admin' => 'boolean',
         ];
     }
+
+    /**
+     * Stable PostHog distinct ID. The primary key remains stable when a user
+     * changes their name or email address.
+     */
+    public function getPostHogDistinctId(): string
+    {
+        return (string) $this->getAuthIdentifier();
+    }
+
+    /**
+     * Person properties are kept off event payloads because name and email are PII.
+     *
+     * @return array<string, bool|string>
+     */
+    public function getPostHogProperties(): array
+    {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'is_admin' => $this->is_admin,
+        ];
+    }
 }

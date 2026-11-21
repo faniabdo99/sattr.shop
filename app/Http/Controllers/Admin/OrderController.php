@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use PostHog\Laravel\Facades\PostHog;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class OrderController extends Controller
@@ -148,7 +149,19 @@ class OrderController extends Controller
         $order->save();
 
         if (isset($data['status'])) {
-            $changeStatus->handle($order, OrderStatus::from($data['status']), $request->user(), $data['status_note'] ?? null);
+            $fromStatus = $order->status;
+            $toStatus = OrderStatus::from($data['status']);
+
+            $changeStatus->handle($order, $toStatus, $request->user(), $data['status_note'] ?? null);
+
+            if ($fromStatus !== $toStatus) {
+                PostHog::capture('order_status_updated', [
+                    'update_mode' => 'single',
+                    'from_status' => $fromStatus->value,
+                    'to_status' => $toStatus->value,
+                    'orders_updated' => 1,
+                ]);
+            }
         }
 
         return back()->with('success', 'Order updated.');
@@ -157,9 +170,25 @@ class OrderController extends Controller
     public function bulk(BulkOrdersRequest $request, ChangeOrderStatus $changeStatus): RedirectResponse
     {
         $status = OrderStatus::from($request->validated('status'));
+        $updated = 0;
 
         Order::query()->whereKey($request->validated('ids'))->with('items')->get()
-            ->each(fn (Order $order) => $changeStatus->handle($order, $status, $request->user(), 'Bulk update'));
+            ->each(function (Order $order) use ($changeStatus, $request, $status, &$updated): void {
+                if ($order->status === $status) {
+                    return;
+                }
+
+                $changeStatus->handle($order, $status, $request->user(), 'Bulk update');
+                $updated++;
+            });
+
+        if ($updated > 0) {
+            PostHog::capture('order_status_updated', [
+                'update_mode' => 'bulk',
+                'to_status' => $status->value,
+                'orders_updated' => $updated,
+            ]);
+        }
 
         return back()->with('success', 'Orders updated.');
     }
@@ -178,6 +207,12 @@ class OrderController extends Controller
         Gate::authorize('update', $order);
 
         $reject->handle($order, $request->user(), $request->validated('reason'));
+
+        PostHog::capture('payment_rejected', [
+            'payment_method' => $order->payment_method->value,
+            'value' => Money::pounds($order->total),
+            'currency' => 'EGP',
+        ]);
 
         return back()->with('success', 'Payment rejected and the customer notified.');
     }

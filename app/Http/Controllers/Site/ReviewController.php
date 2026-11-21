@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use PostHog\Laravel\Facades\PostHog;
 
 class ReviewController extends Controller
 {
@@ -35,11 +36,16 @@ class ReviewController extends Controller
     public function store(ReviewRequest $request, Order $order): RedirectResponse
     {
         if (! $order->review()->exists()) {
-            $order->review()->create([
+            $review = $order->review()->create([
                 ...$request->validated(),
                 'design_id' => $order->items()->value('design_id'),
                 'locale' => app()->getLocale(),
                 'status' => ReviewStatus::Pending,
+            ]);
+
+            PostHog::capture('review_submitted', [
+                'rating' => $review->rating,
+                'locale' => $review->locale,
             ]);
         }
 

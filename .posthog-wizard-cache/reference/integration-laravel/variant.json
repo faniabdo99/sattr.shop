@@ -1,0 +1,43 @@
+{
+  "id": "laravel",
+  "displayName": "Laravel",
+  "match": {
+    "framework": "laravel"
+  },
+  "rules": {
+    "file": "references/COMMANDMENTS.md",
+    "description": "Framework-specific rules the integration must follow"
+  },
+  "products": {
+    "integration": [
+      {
+        "file": "references/laravel.md",
+        "description": "Laravel"
+      }
+    ],
+    "error-tracking": [
+      {
+        "file": "references/error-tracking/php.md",
+        "description": "Php error tracking installation"
+      },
+      {
+        "file": "references/error-tracking/laravel.md",
+        "description": "Laravel"
+      }
+    ],
+    "feature-flags": [
+      {
+        "file": "references/feature-flags/php.md",
+        "description": "Php feature flags installation"
+      },
+      {
+        "file": "references/feature-flags/laravel.md",
+        "description": "Laravel"
+      },
+      {
+        "file": "references/feature-flags/web.md",
+        "description": "Web feature flags installation"
+      }
+    ]
+  }
+}

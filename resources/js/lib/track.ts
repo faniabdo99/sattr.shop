@@ -119,6 +119,7 @@ export function newEventId(): string {
 export function hasProviders(tracking: TrackingConfig): boolean {
     return Boolean(
         tracking.ga4 ||
+        tracking.gtm ||
         tracking.metaPixel ||
         tracking.posthogKey ||
         tracking.tiktok,
@@ -199,10 +200,12 @@ function loadProviders(): void {
 
     loaded = true;
 
-    if (config.ga4) {
-        window.dataLayer = window.dataLayer || [];
-        window.gtag = function gtag(...args: unknown[]) {
-            window.dataLayer!.push(args);
+    if (config.ga4 || config.gtm) {
+        const dataLayer = (window.dataLayer = window.dataLayer || []);
+
+        // Google's tags only read the `arguments` object, never a plain array.
+        window.gtag = function gtag() {
+            dataLayer.push(arguments);
         };
         // Consent Mode v2: everything denied by default, then updated.
         window.gtag('consent', 'default', {
@@ -218,8 +221,16 @@ function loadProviders(): void {
             analytics_storage: 'granted',
         });
         window.gtag('js', new Date());
-        window.gtag('config', config.ga4, { send_page_view: false });
-        script(`https://www.googletagmanager.com/gtag/js?id=${config.ga4}`);
+
+        if (config.ga4) {
+            window.gtag('config', config.ga4, { send_page_view: false });
+            script(`https://www.googletagmanager.com/gtag/js?id=${config.ga4}`);
+        }
+
+        if (config.gtm) {
+            dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+            script(`https://www.googletagmanager.com/gtm.js?id=${config.gtm}`);
+        }
     }
 
     if (config.metaPixel) {
@@ -307,6 +318,22 @@ function dispatch(event: TrackEvent, payload: TrackPayload): void {
 
     if (config.ga4 && window.gtag) {
         window.gtag('event', event, payload);
+    }
+
+    if (config.gtm && window.dataLayer) {
+        const { event_id, page_location, page_title, design, ...ecommerce } =
+            payload;
+
+        // Clear the previous ecommerce object so items never leak between events.
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+            event,
+            event_id,
+            page_location,
+            page_title,
+            design,
+            ecommerce: event === 'page_view' ? undefined : ecommerce,
+        });
     }
 
     if (config.metaPixel && window.fbq) {

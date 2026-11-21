@@ -52,6 +52,7 @@ class SiteChrome
                 ]),
                 'tracking' => array_filter([
                     'ga4' => $this->settings->get('tracking.ga4_id'),
+                    'gtm' => $this->settings->get('tracking.gtm_id'),
                     'metaPixel' => $this->settings->get('tracking.meta_pixel_id'),
                     'posthogKey' => $this->settings->get('tracking.posthog_key'),
                     'posthogHost' => $this->settings->get('tracking.posthog_key') ? $this->settings->get('tracking.posthog_host') : null,
